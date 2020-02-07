@@ -1,5 +1,5 @@
 # pulsar_docker
-Builds a docker image for a pulsar analysis packages and few extras on Ubuntu 16.04 LTS.
+Builds a docker image for a pulsar analysis packages and few extras on Ubuntu 18.04 LTS. Forked from https://github.com/mserylak/pulsar_docker
 
 # Includes
 - calceph
@@ -74,4 +74,4 @@ Check if container is running with docker ps -a. You can log in using **psr** as
     ssh -XY psr@localhost -p 2222
 
 # Issues
-Report problems to mserylak@ska.ac.za
+Report problems to vkrishnan@mpifr-bonn.mpg.de
