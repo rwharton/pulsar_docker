@@ -215,7 +215,10 @@ RUN apt-get -y install \
     zlib1g-dev \
     software-properties-common \
     openjdk-8-jdk\
-    python3 
+    python3\
+    libopenblas-base\
+    libopenblas-dev\
+    pax-utils 
 
 # Install python modules
 
