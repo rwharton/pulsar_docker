@@ -1,20 +1,25 @@
 # Copyright (C) 2016, 2017 by Maciej Serylak
+# Copyright (C) 2019 by Maciej Serylak and Vivek Venkatraman Krishnan
+
 # Licensed under the Academic Free License version 3.0
 # This program comes with ABSOLUTELY NO WARRANTY.
 # You are free to modify and redistribute this code as long
 # as you do not remove the above attribution and reasonably
 # inform receipients that you have modified the original work.
 
-FROM ubuntu:xenial-20170802
 
-MAINTAINER Maciej Serylak "mserylak@ska.ac.za"
+
+
+FROM ubuntu:bionic-20200112
+
+MAINTAINER Vivek Venkatraman Krishnan "vkrishnan@mpifr-bonn.mpg.de"
 
 # Suppress debconf warnings
 ENV DEBIAN_FRONTEND noninteractive
 
 # Switch account to root and adding user accounts and password
 USER root
-RUN echo "root:Docker!" | chpasswd
+RUN echo "root:V153k!" | chpasswd
 
 # Create psr user which will be used to run commands with reduced privileges.
 RUN adduser --disabled-password --gecos 'unprivileged user' psr && \
@@ -22,12 +27,13 @@ RUN adduser --disabled-password --gecos 'unprivileged user' psr && \
     mkdir -p /home/psr/.ssh && \
     chown -R psr:psr /home/psr/.ssh
 
-# Create space for ssh deamon and update the system
-RUN echo 'deb http://us.archive.ubuntu.com/ubuntu trusty main multiverse' >> /etc/apt/sources.list && \
+# Create space for ssh deamozshn and update the system
+RUN echo 'deb http://us.archive.ubuntu.com/ubuntu bionic main multiverse' >> /etc/apt/sources.list && \
+echo 'deb http://mirrors.kernel.org/ubuntu/ bionic main multiverse' >> /etc/apt/sources.list && \
     mkdir /var/run/sshd && \
     apt-get -y check && \
     apt-get -y update && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common python-software-properties && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common &&\
     apt-get -y update --fix-missing && \
     apt-get -y upgrade
 
@@ -48,6 +54,8 @@ RUN apt-get -y install \
     cvs \
     cython \
     dkms \
+    dvipng \
+    emacs\
     exuberant-ctags \
     f2c \
     fftw-dev \
@@ -73,26 +81,17 @@ RUN apt-get -y install \
     htop \
     hwloc \
     ipython \
-    ipython-notebook \
-    libatlas-dev \
+    python3-notebook python-notebook jupyter jupyter-core python-ipykernel\
+    libatlas-base-dev \
     libbison-dev \
-    libblas-common \
     libblas-dev \
-    libblas3 \
-    libboost-program-options1.58-dev \
-    libboost-python1.58-dev \
-    libboost-regex1.58-dev \
-    libboost-system1.58-dev \
-    libboost1.58-all-dev \
-    libboost1.58-dev \
-    libboost1.58-tools-dev \
+    liblapack-dev \
+    libboost-all-dev \
     libc-dev-bin \
     libc6-dev \
     libcfitsio-bin \
     libcfitsio-dev \
     libcfitsio-doc \
-    libcfitsio2 \
-    libcfitsio3-dev \
     libcloog-isl4 \
     libcppunit-dev \
     libcppunit-subunit-dev \
@@ -108,17 +107,13 @@ RUN apt-get -y install \
     libfreetype6 \
     libfreetype6-dev \
     libgd-dev \
-    libgd2-xpm-dev \
     libgd3 \
     libglib2.0-0 \
     libglib2.0-dev \
     libgmp3-dev \
     libgsl-dev \
-    libgsl2 \
     libgtksourceview-3.0-dev \
     libgtksourceview2.0-dev \
-    libhdf5-10 \
-    libhdf5-cpp-11 \
     libhdf5-dev \
     libhdf5-serial-dev \
     libhwloc-dev \
@@ -143,9 +138,7 @@ RUN apt-get -y install \
     libpng++-dev \
     libpng-sixlegs-java \
     libpng-sixlegs-java-doc \
-    libpng12-0 \
-    libpng12-dev \
-    libpng3 \
+    libpng-dev \
     libpnglite-dev \
     libpth-dev \
     libqt4-dbus \
@@ -166,13 +159,9 @@ RUN apt-get -y install \
     libqt4-test \
     libqt4-xml \
     libqt4-xmlpatterns \
-    libqt4pas-dev \
-    libqt4pas5 \
-    libreadline6 \
-    libreadline6-dev \
+    libreadline-dev \
     libsocket++-dev \
     libsocket++1 \
-    libsource-highlight-qt4-3 \
     libssl-dev \
     libtool \
     libx11-dev \
@@ -194,7 +183,6 @@ RUN apt-get -y install \
     pbzip2 \
     pgplot5 \
     pkg-config \
-    pkgconf \
     pyqt4-dev-tools \
     python \
     python-dev \
@@ -209,9 +197,8 @@ RUN apt-get -y install \
     qt4-qtconfig \
     screen \
     source-highlight \
-    source-highlight-ide \
     subversion \
-    swig2.0 \
+    swig \
     tcsh \
     tk \
     tk-dev \
@@ -220,9 +207,18 @@ RUN apt-get -y install \
     wcslib-dev \
     wcslib-tools \
     wget \
-    zlib1g-dev
+    zlib1g-dev\
+    zsh \
+    htop\
+    latex2html\
+    libpng-dev\
+    zlib1g-dev \
+    software-properties-common \
+    openjdk-8-jdk\
+    python3 
 
 # Install python modules
+
 RUN pip install pip -U && \
     pip install setuptools -U && \
     pip install datetime -U && \
@@ -235,7 +231,6 @@ RUN pip install pip -U && \
     pip install scipy -U && \
     pip install pandas -U && \
     pip install h5py -U && \
-    pip install fitsio -U && \
     pip install astropy -U && \
     pip install astroplan -U && \
     pip install astropy_helpers -U && \
@@ -249,7 +244,18 @@ RUN pip install pip -U && \
     pip install matplotlib -U && \
     pip install seaborn -U && \
     pip install lmfit -U && \
-    pip install pyephem -U
+    pip install pyephem -U && \
+    pip install h5py -U && \
+    pip install statsmodels -U && \
+    pip install schwimmbad -U && \
+    pip install ChainConsumer -U && \
+    pip install setuptools_scm pep517 -U && \
+    pip install emcee -U && \
+    pip install scikit-learn -U && \
+    pip install corner -U && \
+    pip install bokeh -U && \
+    pip install psrqpy -U  
+
 
 # Switch account to psr
 USER psr
@@ -264,9 +270,9 @@ RUN mkdir -p /home/psr/software
 WORKDIR $PSRHOME
 RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-2.3.2.tar.gz && \
     tar -xvvf calceph-2.3.2.tar.gz -C $PSRHOME && \
-    wget http://ds9.si.edu/download/ubuntu14/ds9.ubuntu14.7.5.tar.gz && \
+    wget http://ds9.si.edu/download/ubuntu18/ds9.ubuntu18.8.0.1.tar.gz && \
     mkdir $PSRHOME/ds9-7.5 && \
-    tar -xvvf ds9.ubuntu14.7.5.tar.gz -C $PSRHOME/ds9-7.5 && \
+    tar -xvvf ds9.ubuntu18.8.0.1.tar.gz -C $PSRHOME/ds9-7.5 && \
     wget http://heasarc.gsfc.nasa.gov/FTP/software/lheasoft/fv/fv5.4_pc_linux64.tar.gz && \
     tar -xvvf fv5.4_pc_linux64.tar.gz -C $PSRHOME && \
     wget http://www.atnf.csiro.au/people/pulsar/psrcat/downloads/psrcat_pkg.tar.gz && \
@@ -279,7 +285,7 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     tar -xvvf szip-2.1.1.tar.gz && \
     wget https://www.hdfgroup.org/ftp/HDF5/tools/h5check/src/h5check-2.0.1.tar.gz && \
     tar -xvvf h5check-2.0.1.tar.gz && \
-    wget -U 'Linux' http://bsdforge.com/projects/source/devel/clig/clig-1.9.11.2.tar.xz && \
+    wget -U 'Linux' https://bsdforge.com/projects/devel/clig/src/clig-1.9.11.2.tar.xz && \
     tar -xvvf clig-1.9.11.2.tar.xz && \
     wget http://www.bastoul.net/cloog/pages/download/cloog-0.18.4.tar.gz && \
     tar -xvvf cloog-0.18.4.tar.gz && \
@@ -289,8 +295,8 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     tar -xvvf GeographicLib-1.48.tar.gz && \
     wget http://www.hdfgroup.org/ftp/HDF5/projects/jpss/h5edit/h5edit-1.3.1.tar.gz && \
     tar -xvvf h5edit-1.3.1.tar.gz && \
-    wget http://www.leptonica.com/source/leptonica-1.74.4.tar.gz && \
-    tar -xvvf leptonica-1.74.4.tar.gz && \
+    wget http://www.leptonica.org/source/leptonica-1.79.0.tar.gz && \
+    tar -xvvf leptonica-1.79.0.tar.gz && \
     wget http://downloads.sourceforge.net/project/tvmet/Tar.Gz_Bz2%20Archive/1.7.2/tvmet-1.7.2.tar.bz2 && \
     tar -xvvf tvmet-1.7.2.tar.bz2 && \
     wget http://www.fftw.org/fftw-2.1.5.tar.gz && \
@@ -314,7 +320,12 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     git clone https://github.com/scottransom/psrfits2psrfits.git && \
     git clone https://github.com/scottransom/psrfits_utils.git && \
     git clone https://github.com/scottransom/pyslalib.git && \
-    git clone https://github.com/mserylak/coast_guard.git
+    git clone https://github.com/mserylak/coast_guard.git && \
+    git clone https://github.com/ajameson/pfits.git && \
+    git clone git://git.code.sf.net/p/psrdada/code && \
+    git clone https://github.com/straten/epsic.git && \
+    git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+
 
 # PGPLOT
 ENV PGPLOT_DIR="/usr/lib/pgplot5" \
@@ -365,9 +376,7 @@ WORKDIR $PSRHOME/tempo
 RUN ./prepare && \
     ./configure --prefix=$PSRHOME/tempo && \
     make && \
-    make install && \
-    echo " 5109318.8410  2006836.3673    -3238921.7749   1  MEERKAT             m  MK" >> obsys.dat && \
-    awk '{print $(NF-1), $0}' obsys.dat | sort -V | cut -d\  -f2-
+    make install
 
 # tempo2
 ENV TEMPO2=$PSRHOME"/tempo2/T2runtime" \
@@ -378,7 +387,7 @@ WORKDIR $PSRHOME/tempo2
 # A fix to get rid of: returned a non-zero code: 126.
 RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap
 RUN ./bootstrap && \
-    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --with-calceph=$CALCEPH/install/lib --enable-shared --enable-static --with-pic F77=gfortran CPPFLAGS="-I"$CALCEPH"/install/include" LDFLAGS="-L"$CALCEPH"/install/lib" && \
+    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --with-calceph=$CALCEPH/install/lib --enable-shared --enable-static --with-pic F77=gfortran CPPFLAGS="$CPPFLAGS -I"$CALCEPH"/install/include" LDFLAGS="-L"$CALCEPH"/install/lib" && \
     make -j $(nproc) && \
     make install && \
     make plugins-install
@@ -451,18 +460,46 @@ RUN mkdir bin lib include && \
     awk '!x{x=sub("CFITSIO_EXT_INC.*=.*","CFITSIO_EXT_INC = -I/usr/include")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
     make -j $(nproc)
 
+ENV EPSIC=$PSRHOME"/epsic"
+WORKDIR $EPSIC/src
+
+RUN ./bootstrap && \
+    ./configure --prefix=$PSRHOME"/epsic/install" && make -j $(nproc) && make &&  make install > test
+
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/epsic/install/lib" \
+    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/epsic/install/include/epsic" \
+    PATH=$PATH:$PSRHOME"/epsic/install/bin" \
+    CPPFLAGS="-I ${PSRHOME}/epsic/install/include/epsic"  \
+    CFLAGS="-I ${PSRHOME}/epsic/install/include/epsic" 
+
+
+
 # PSRCHIVE
 ENV PSRCHIVE=$PSRHOME"/psrchive/install" \
     PATH=$PATH:$PSRHOME"/psrchive/install/bin" \
     C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/psrchive/install/include" \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/psrchive/install/lib" \
     PYTHONPATH=$PYTHONPATH:$PSRHOME"/psrchive/install/lib/python2.7/site-packages"
+
+
 WORKDIR $PSRHOME/psrchive/
+
+# Go to a working version of pdmp!
+RUN git checkout 03ab8b5a9326cbdd386c9a42d72142a79baf7155 
+
 RUN ./bootstrap && \
     ./configure --prefix=$PSRCHIVE --x-libraries=/usr/lib/x86_64-linux-gnu --with-psrxml-dir=$PSRXML/install --enable-shared --enable-static F77=gfortran LDFLAGS="-L"$PSRXML"/install/lib" LIBS="-lpsrxml -lxml2" && \
     make -j $(nproc) && \
-    make && \
-    make install
+    make install 
+
+# WORKDIR $PSRHOME/psrchive/
+# RUN ./bootstrap && \
+#     ./configure --prefix=$PSRCHIVE --x-libraries=/usr/lib/x86_64-linux-gnu --with-psrxml-dir=$PSRXML/install --enable-shared --enable-static F77=gfortran LDFLAGS="-L"$PSRXML"/install/lib" LIBS="-lpsrxml -lxml2" --with-epsic-include-dir=$EPSIC"/install/include/epsic" --with-epsic-lib-dir=$EPSIC"/install/lib"   --with-epsic-dir=$EPSIC"/install" --disable-silent-rules && \
+#     make -j $(nproc) && \
+#     make && \
+#     make install
+
+
 WORKDIR $HOME
 RUN $PSRCHIVE/bin/psrchive_config >> .psrchive.cfg && \
     sed -i 's/# ArrivalTime::default_format = Parkes/ArrivalTime::default_format = Tempo2/g' .psrchive.cfg && \
@@ -503,8 +540,7 @@ RUN ./bootstrap && \
 ENV SIGPYPROC=$PSRHOME"/sigpyproc" \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/sigpyproc/lib/c"
 WORKDIR $PSRHOME/sigpyproc
-RUN mv setup.cfg setup.cfg_ORIGINAL && \
-    python setup.py install --record list.txt --user
+RUN python setup.py install --record list.txt --user
 
 # szlib
 ENV SZIP=$PSRHOME"/szip-2.1.1" \
@@ -536,15 +572,34 @@ RUN cmake .. -DCMAKE_INSTALL_PREFIX=$DAL/install && \
     make && \
     make install
 
+
+ENV PSRDADA=$PSRHOME"/psrdada" \
+    PATH=$PATH:$PSRHOME"/psrdada/install/bin" \
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/psrdada/install/lib" \
+    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/psrdada/install/include" \
+    CPPFLAGS="$CPPFLAGS -I ${PSRHOME}/psrdada/install/include -I ${PSRHOME}/epsic/install/include/epsic"  \
+    CFLAGS="$CFLAGS -I ${PSRHOME}/psrdada/install/include -I ${PSRHOME}/epsic/install/include/epsic" 
+
+#psrdada
+RUN     mv $PSRHOME/code $PSRDADA
+WORKDIR $PSRDADA
+RUN ./bootstrap && ./configure --prefix=$PSRDADA/install --enable-shared && \
+        make -j $(nproc) &&\
+        make &&\
+        make install
+
+ENV PATH=$PATH:"$PSRDADA/install/bin"
+
 # DSPSR
 ENV DSPSR=$PSRHOME"/dspsr" \
     PATH=$PATH:$PSRHOME"/dspsr/install/bin" \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/dspsr/install/lib" \
     C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/dspsr/install/include"
+
 WORKDIR $DSPSR
 RUN ./bootstrap && \
-    echo "apsr asp bcpm bpsr caspsr cpsr cpsr2 dummy fits kat lbadr lbadr64 lofar_dal lump lwa puma2 sigproc ska1" > backends.list && \
-    ./configure --prefix=$DSPSR/install --x-libraries=/usr/lib/x86_64-linux-gnu CPPFLAGS="-I"$DAL"/install/include -I/usr/include/hdf5/serial -I/usr/local/cuda/include -I"$PSRXML"/install/include" LDFLAGS="-L"$DAL"/install/lib -L/usr/lib/x86_64-linux-gnu/hdf5/serial -L"$PSRXML"/install/lib -L/usr/local/cuda/lib64" LIBS="-lpgplot -lcpgplot -lpsrxml -lxml2" && \
+    echo "apsr asp bcpm bpsr caspsr cpsr cpsr2 dada dummy fits kat lbadr lbadr64 lofar_dal lump lwa puma2 sigproc ska1" > backends.list && \
+    ./configure --prefix=$DSPSR/install --x-libraries=/usr/lib/x86_64-linux-gnu CPPFLAGS="$CPPFLAGS -I"$DAL"/install/include -I/usr/include/hdf5/serial -I/usr/local/cuda/include -I"$PSRXML"/install/include" LDFLAGS="-L"$DAL"/install/lib -L/usr/lib/x86_64-linux-gnu/hdf5/serial -L"$PSRXML"/install/lib -L/usr/local/cuda/lib64" LIBS="-lpgplot -lcpgplot -lpsrxml -lxml2" && \
     make -j $(nproc) && \
     make && \
     make install
@@ -576,9 +631,9 @@ WORKDIR $CTAGS
 RUN ./configure --prefix=$CTAGS/install && \
     make -j $(nproc) && \
     make && \
-    make install
+    make install 
 
-# GeographicLib
+#GeographicLib
 ENV GEOLIB=$PSRHOME"/GeographicLib-1.48" \
     PATH=$PATH:$PSRHOME"/GeographicLib-1.48/install/bin" \
     C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/GeographicLib-1.48/install/include" \
@@ -591,20 +646,20 @@ RUN ./configure --prefix=$GEOLIB/install && \
 WORKDIR $GEOLIB/python
 RUN python setup.py install --user --record=list.txt
 
-# h5edit
-ENV H5EDIT=$PSRHOME"/h5edit-1.3.1" \
-    PATH=$PATH:$PSRHOME"/h5edit-1.3.1/install/bin"
-WORKDIR $H5EDIT
-RUN ./configure --prefix=$H5EDIT/install CFLAGS="-Doff64_t=__off64_t" LDFLAGS="-L/usr/lib/x86_64-linux-gnu/hdf5/serial" LIBS="-lhdf5 -lhdf5_hl" CPPFLAGS=-I/usr/include/hdf5/serial && \
-    make -j $(nproc) && \
-    make && \
-    make install
+# # h5edit
+# ENV H5EDIT=$PSRHOME"/h5edit-1.3.1" \
+#     PATH=$PATH:$PSRHOME"/h5edit-1.3.1/install/bin"
+# WORKDIR $H5EDIT
+# RUN ./configure --prefix=$H5EDIT/install CFLAGS="-Doff64_t=__off64_t" LDFLAGS="-L/usr/lib/x86_64-linux-gnu/hdf5/serial" LIBS="-lhdf5 -lhdf5_hl" CPPFLAGS=-I/usr/include/hdf5/serial && \
+#     make -j $(nproc) && \
+#     make && \
+#     make install
 
 # Leptonica
-ENV LEPTONICA=$PSRHOME"/leptonica-1.74.4" \
-    PATH=$PATH:$PSRHOME"/leptonica-1.74.4/install/bin" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/leptonica-1.74.4/install/include" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/leptonica-1.74.4/install/lib"
+ENV LEPTONICA=$PSRHOME"/leptonica-1.79.0" \
+    PATH=$PATH:$PSRHOME"/leptonica-1.79.0/install/bin" \
+    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/leptonica-1.79.0/install/include" \
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/leptonica-1.79.0/install/lib"
 WORKDIR $LEPTONICA
 RUN ./configure --prefix=$LEPTONICA/install && \
     make && \
@@ -641,8 +696,10 @@ ENV PSRSALSA=$PSRHOME"/psrsalsa" \
     PATH=$PATH:$PSRHOME"/psrsalsa/bin" \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/psrsalsa/src/lib"
 WORKDIR $PSRSALSA
-RUN make -j $(nproc) && \
+RUN sed -i.backup -e's/GSLFLAGS =.*/GSLFLAGS = -DGSL_VERSION_NUMBER=203/' Makefile && \
+    make -j $(nproc) && \
     make
+
 
 # PRESTO
 ENV PRESTO=$PSRHOME"/presto" \
@@ -653,9 +710,12 @@ WORKDIR $PRESTO/src
 #RUN make makewisdom
 RUN make prep && \
     make -j $(nproc) && \
-    make
-WORKDIR $PRESTO/python
-RUN make
+    make && \
+    make mpi
+WORKDIR $PRESTO
+RUN pip install .
+
+
 
 # psrfits2psrfits
 ENV PSRFITS2PSRFITS=$PSRHOME"/psrfits2psrfits" \
@@ -687,6 +747,34 @@ ENV COAST_GUARD=$PSRHOME"/coast_guard" \
     PATH=$PATH:$PSRHOME"/coast_guard":$PSRHOME"/coast_guard/coast_guard" \
     COASTGUARD_CFG=$PSRHOME"/coast_guard/configurations" \
     PYTHONPATH=$PYTHONPATH:$PSRHOME"/coast_guard":$PSRHOME"/coast_guard/coast_guard"
+
+
+
+#pfits
+ENV PFITS=$PSRHOME"/pfits"  
+WORKDIR $PFITS
+RUN ./bootstrap && ./configure --prefix="$PFITS/install" && \
+    make  -j $(nproc) && \
+    make && \
+    make install
+
+ENV PATH=$PATH:"$PFITS/install/bin"
+
+
+# #topcat
+# WORKDIR $PSRHOME/topcat
+# RUN wget http://www.star.bris.ac.uk/~mbt/topcat/topcat-full.jar 
+
+#Zsh commands
+
+RUN rm -rf /home/psr/.zprezto && zsh -c 'git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"' && \
+zsh -c 'setopt EXTENDED_GLOB && for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}" done '
+
+RUN chsh -s /bin/zsh
+ADD ./.zpreztorc /home/psr/
+
+RUN curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh && \
+curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
 
 # Clean downloaded source codes
 WORKDIR $PSRHOME
