@@ -779,6 +779,36 @@ ADD ./.zpreztorc /home/psr/
 RUN curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh && \
 curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
 
+
+#Installing TempoNest and relevant dependencies
+USER psr
+WORKDIR $PSRHOME
+RUN git clone https://github.com/JohannesBuchner/MultiNest
+WORKDIR $PSRHOME/MultiNest/build
+RUN cmake ..
+RUN make
+WORKDIR $PSRHOME/MultiNest/lib
+RUN ln -s libmultinest_mpi.so libnest3.so
+
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$PSRHOME/MultiNest/lib" \
+    CFLAGS="$CFLAGS -I$PSRHOME/MultiNest/include" \
+    CPPFLAGS="$CPPFLAGS -I$PSRHOME/MultiNest/include" \
+    MULTINEST_DIR="$PSRHOME/MultiNest/lib"
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/usr/lib/x86_64-linux-gnu/openmpi/lib/"
+
+WORKDIR $PSRHOME
+RUN git clone https://github.com/aparthas3112/TempoNest.git
+WORKDIR $PSRHOME/TempoNest/PolyChord
+RUN make
+RUN mv src/libchord.a $PSRHOME/MultiNest/lib/
+
+WORKDIR $PSRHOME/TempoNest
+RUN chmod +x autogen.sh
+RUN ./autogen.sh
+RUN ./configure --prefix=$PSRHOME/TempoNest
+RUN make temponest
+RUN make temponest-install
+
 # Clean downloaded source codes
 WORKDIR $PSRHOME
 RUN rm -rf ./*.bz2 ./*.gz ./*.xz ./*.ztar ./*.zip
@@ -986,6 +1016,12 @@ RUN echo "" >> .bashrc && \
     echo "export PATH=\$PATH:\$COAST_GUARD:\$COAST_GUARD/coast_guard" >> .mysetenv.bash && \
     echo "export COASTGUARD_CFG=\$COAST_GUARD/configurations" >> .mysetenv.bash && \
     echo "export PYTHONPATH=\$PYTHONPATH:\$COAST_GUARD:\$COAST_GUARD/coast_guard" >> .mysetenv.bash && \
+    echo "# TempoNest" >> .mysetenv.bash && \
+    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/home/psr/software/MultiNest/lib" >> .mysetenv.bash && \
+    echo "export CFLAGS=\$CFLAGS -I/home/psr/software/MultiNest/include" >> .mysetenv.bash && \
+    echo "export CPPFLAGS=\$CPPFLAGS -I/home/psr/software/MultiNest/include" >> .mysetenv.bash && \
+    echo "export MULTINEST_DIR=\$PSRHOME/MultiNest/lib" >> .mysetenv.bash && \
+    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/openmpi/lib/" >> .mysetenv.bash && \
     /bin/bash -c "source $HOME/.bashrc"
 
 # Update database for locate and run sshd server and expose port 22
