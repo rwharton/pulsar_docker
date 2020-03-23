@@ -327,7 +327,9 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     git clone https://github.com/ajameson/pfits.git && \
     git clone git://git.code.sf.net/p/psrdada/code && \
     git clone https://github.com/straten/epsic.git && \
-    git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+    git clone https://github.com/JohannesBuchner/MultiNest  && \
+    git clone https://github.com/aparthas3112/TempoNest.git && \
+    git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto" 
 
 
 # PGPLOT
@@ -781,33 +783,19 @@ curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utili
 
 
 #Installing TempoNest and relevant dependencies
-USER psr
 WORKDIR $PSRHOME
-RUN git clone https://github.com/JohannesBuchner/MultiNest
 WORKDIR $PSRHOME/MultiNest/build
-RUN cmake ..
-RUN make
-WORKDIR $PSRHOME/MultiNest/lib
-RUN ln -s libmultinest_mpi.so libnest3.so
-
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$PSRHOME/MultiNest/lib" \
+RUN cmake .. && make && ln -s $PSRHOME/MultiNest/lib/libmultinest_mpi.so $PSRHOME/MultiNest/lib/libnest3.so
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$PSRHOME/MultiNest/lib":"/usr/lib/x86_64-linux-gnu/openmpi/lib/" \
     CFLAGS="$CFLAGS -I$PSRHOME/MultiNest/include" \
     CPPFLAGS="$CPPFLAGS -I$PSRHOME/MultiNest/include" \
     MULTINEST_DIR="$PSRHOME/MultiNest/lib"
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/usr/lib/x86_64-linux-gnu/openmpi/lib/"
 
-WORKDIR $PSRHOME
-RUN git clone https://github.com/aparthas3112/TempoNest.git
 WORKDIR $PSRHOME/TempoNest/PolyChord
-RUN make
-RUN mv src/libchord.a $PSRHOME/MultiNest/lib/
+RUN make && mv src/libchord.a $PSRHOME/MultiNest/lib/
 
 WORKDIR $PSRHOME/TempoNest
-RUN chmod +x autogen.sh
-RUN ./autogen.sh
-RUN ./configure --prefix=$PSRHOME/TempoNest
-RUN make temponest
-RUN make temponest-install
+RUN sh ./autogen.sh && ./configure --prefix=$PSRHOME/TempoNest && make temponest && make temponest-install
 
 # Clean downloaded source codes
 WORKDIR $PSRHOME
