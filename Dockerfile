@@ -776,7 +776,6 @@ RUN rm -rf /home/psr/.zprezto && zsh -c 'git clone --recursive https://github.co
 zsh -c 'setopt EXTENDED_GLOB && for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}" done '
 
 RUN chsh -s /bin/zsh
-ADD ./.zpreztorc /home/psr/
 
 RUN curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh && \
 curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
