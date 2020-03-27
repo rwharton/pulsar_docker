@@ -35,7 +35,8 @@ echo 'deb http://mirrors.kernel.org/ubuntu/ bionic main multiverse' >> /etc/apt/
     apt-get -y update && \
     apt-get install -y apt-utils apt-transport-https software-properties-common &&\
     apt-get -y update --fix-missing && \
-    apt-get -y upgrade
+    apt-get -y upgrade &&\
+    apt-get -y update --fix-missing
 
 RUN apt-get -y install \
     apt-utils \
@@ -227,7 +228,7 @@ RUN pip install pip -U && \
     pip install datetime -U && \
     pip install bitstring -U && \
     pip install ipython -U && \
-    pip install jupyter -U && \
+    pip install --ignore-installed jupyter -U && \
     pip install six -U && \
     pip install numpy -U && \
     pip install scipy -U && \
