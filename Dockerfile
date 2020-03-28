@@ -489,20 +489,10 @@ ENV PSRCHIVE=$PSRHOME"/psrchive/install" \
 
 WORKDIR $PSRHOME/psrchive/
 
-# Go to a working version of pdmp!
-RUN git checkout 03ab8b5a9326cbdd386c9a42d72142a79baf7155 
-
 RUN ./bootstrap && \
     ./configure --prefix=$PSRCHIVE --x-libraries=/usr/lib/x86_64-linux-gnu --with-psrxml-dir=$PSRXML/install --enable-shared --enable-static F77=gfortran LDFLAGS="-L"$PSRXML"/install/lib" LIBS="-lpsrxml -lxml2" && \
     make -j $(nproc) && \
     make install 
-
-# WORKDIR $PSRHOME/psrchive/
-# RUN ./bootstrap && \
-#     ./configure --prefix=$PSRCHIVE --x-libraries=/usr/lib/x86_64-linux-gnu --with-psrxml-dir=$PSRXML/install --enable-shared --enable-static F77=gfortran LDFLAGS="-L"$PSRXML"/install/lib" LIBS="-lpsrxml -lxml2" --with-epsic-include-dir=$EPSIC"/install/include/epsic" --with-epsic-lib-dir=$EPSIC"/install/lib"   --with-epsic-dir=$EPSIC"/install" --disable-silent-rules && \
-#     make -j $(nproc) && \
-#     make && \
-#     make install
 
 
 WORKDIR $HOME
@@ -706,7 +696,7 @@ RUN sed -i.backup -e's/GSLFLAGS =.*/GSLFLAGS = -DGSL_VERSION_NUMBER=203/' Makefi
     make
 
 
-# PRESTO
+# PRESTO 3
 ENV PRESTO=$PSRHOME"/presto" \
     PATH=$PATH:$PSRHOME"/presto/bin" \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/presto/lib" \
@@ -773,9 +763,8 @@ ENV PATH=$PATH:"$PFITS/install/bin"
 #Zsh commands
 
 RUN rm -rf /home/psr/.zprezto && zsh -c 'git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"' && \
-zsh -c 'setopt EXTENDED_GLOB && for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}" done '
+zsh -c 'setopt EXTENDED_GLOB && for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"; done '
 
-RUN chsh -s /bin/zsh
 
 RUN curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh && \
 curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
@@ -828,6 +817,7 @@ RUN echo "" >> .bashrc && \
     echo "export PROMPT_COMMAND=\"history -a\"" >> .mysetenv.bash && \
     echo "bind '\"\e[A\":history-search-backward'" >> .mysetenv.bash && \
     echo "bind '\"\e[B\":history-search-forward'" >> .mysetenv.bash && \
+
     echo "" >> .mysetenv.bash && \
     echo "# PGPLOT" >> .mysetenv.bash && \
     echo "export PGPLOT_DIR=/usr/lib/pgplot5" >> .mysetenv.bash && \
@@ -837,43 +827,52 @@ RUN echo "" >> .bashrc && \
     echo "export PGPLOT_FOREGROUND=black" >> .mysetenv.bash && \
     echo "export PGPLOT_DEV=/xs" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# calceph" >> .mysetenv.bash && \
     echo "export CALCEPH=\$PSRHOME/calceph-2.3.2" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$CALCEPH/install/bin" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$CALCEPH/install/lib" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$CALCEPH/install/include" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# ds9" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PSRHOME/ds9-7.5" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# fv" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PSRHOME/fv5.4" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# psrcat" >> .mysetenv.bash && \
     echo "export PSRCAT_FILE=\$PSRHOME/psrcat_tar/psrcat.db" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PSRHOME/psrcat_tar" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# psrXML" >> .mysetenv.bash && \
     echo "export PSRXML=\$PSRHOME/psrxml" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PSRXML/install/bin" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRXML/install/lib" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$PSRXML/install/include" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# tempo" >> .mysetenv.bash && \
     echo "export TEMPO=\$PSRHOME/tempo" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$TEMPO/bin" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# tempo2" >> .mysetenv.bash && \
     echo "export TEMPO2=\$PSRHOME/tempo2/T2runtime" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$TEMPO2/bin" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$TEMPO2/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$TEMPO2/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# Eigen 3" >> .mysetenv.bash && \
     echo "export EIGEN3=\$PSRHOME/eigen-eigen-5a0156e40feb" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$EIGEN3/install/include/eigen3" >> .mysetenv.bash && \
     echo "export PKG_CONFIG_PATH=\$PKG_CONFIG_PATH:\$EIGEN3/install" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# HEALPix" >> .mysetenv.bash && \
     echo "export HEALPIX=\$PSRHOME/Healpix_3.31" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$HEALPIX/bin" >> .mysetenv.bash && \
@@ -881,6 +880,12 @@ RUN echo "" >> .bashrc && \
     echo "export PKG_CONFIG_PATH=\$PKG_CONFIG_PATH:\$HEALPIX/lib" >> .mysetenv.bash && \
     echo "export HEALPIX_TARGET=optimized_gcc" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
+    echo "# EPSIC" >> .mysetenv.bash && \
+    echo "export EPSIC=\$PSRHOME/epsic" >> .mysetenv.bash && \
+    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRHOME/epsic/install/lib" >> .mysetenv.bash && \
+    echo "C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$EPSIC/install/include/epsic" >> .mysetenv.bash && \
+
     echo "# PSRCHIVE" >> .mysetenv.bash && \
     echo "export PSRCHIVE=\$PSRHOME/psrchive/install" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PSRCHIVE/bin" >> .mysetenv.bash && \
@@ -888,14 +893,17 @@ RUN echo "" >> .bashrc && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRCHIVE/lib" >> .mysetenv.bash && \
     echo "export PYTHONPATH=\$PYTHONPATH:\$PSRCHIVE/lib/python2.7/site-packages" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# SOFA C-library" >> .mysetenv.bash && \
     echo "export SOFA=\$PSRHOME/sofa" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$SOFA/20170420/c/install/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$SOFA/20170420/c/install/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# SOFA FORTRAN-library" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$SOFA/20170420/f77/install/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# SIGPROC" >> .mysetenv.bash && \
     echo "export SIGPROC=\$PSRHOME/sigproc" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$SIGPROC/install/bin" >> .mysetenv.bash && \
@@ -904,116 +912,154 @@ RUN echo "" >> .bashrc && \
     echo "export CC=gcc" >> .mysetenv.bash && \
     echo "export CXX=g++" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# sigpyproc" >> .mysetenv.bash && \
     echo "export SIGPYPROC=\$PSRHOME/sigpyproc" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$SIGPYPROC/lib/c" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# szlib" >> .mysetenv.bash && \
     echo "export SZIP=\$PSRHOME/szip-2.1.1" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$SZIP/install/lib" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$SZIP/install/include" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# h5check" >> .mysetenv.bash && \
     echo "export H5CHECK=\$PSRHOME/h5check-2.0.1" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$H5CHECK/install/bin" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# DAL" >> .mysetenv.bash && \
     echo "export DAL=\$PSRHOME/DAL" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$DAL/install/bin" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$DAL/install/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$DAL/install/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
+    echo "# PSRDADA" >> .mysetenv.bash && \
+    echo "export PSRDADA=\$PSRHOME/psrdada" >> .mysetenv.bash && \
+    echo "export PATH=\$PATH:\$PSRDADA/install/bin" >> .mysetenv.bash && \
+    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRDADA/install/lib" >> .mysetenv.bash && \
+    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:$PSRDADA/install/include" >> .mysetenv.bash && \
+    echo "" >> .mysetenv.bash && \
+    
     echo "# DSPSR" >> .mysetenv.bash && \
     echo "export DSPSR=\$PSRHOME/dspsr" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$DSPSR/install/bin" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$DSPSR/install/lib" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$DSPSR/install/include" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# clig" >> .mysetenv.bash && \
     echo "export CLIG=\$PSRHOME/clig" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$CLIG/instal/bin" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$CLIG/instal/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# CLooG" >> .mysetenv.bash && \
     echo "export CLOOG=\$PSRHOME/cloog-0.18.4" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$CLOOG/install/bin" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$CLOOG/install/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$CLOOG/install/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# Ctags" >> .mysetenv.bash && \
     echo "export CTAGS=\$PSRHOME/ctags-5.8" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$CTAGS/install/bin" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# GeographicLib" >> .mysetenv.bash && \
     echo "export GEOLIB=\$PSRHOME/GeographicLib-1.48" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$GEOLIB/install/bin" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$GEOLIB/install/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$GEOLIB/install/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
-    echo "# h5edit" >> .mysetenv.bash && \
-    echo "export H5EDIT=\$PSRHOME/h5edit-1.3.1" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$H5EDIT/install/bin" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
+
+    # echo "# h5edit" >> .mysetenv.bash && \
+    # echo "export H5EDIT=\$PSRHOME/h5edit-1.3.1" >> .mysetenv.bash && \
+    # echo "export PATH=\$PATH:\$H5EDIT/install/bin" >> .mysetenv.bash && \
+    # echo "" >> .mysetenv.bash && \
+
     echo "# Leptonica" >> .mysetenv.bash && \
     echo "export LEPTONICA=\$PSRHOME/leptonica-1.74.4" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$LEPTONICA/install/bin" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$LEPTONICA/install/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$LEPTONICA/install/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# tvmet" >> .mysetenv.bash && \
     echo "export TVMET=\$PSRHOME/tvmet-1.7.2" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$TVMET/install/bin" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$TVMET/install/include" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# FFTW2" >> .mysetenv.bash && \
     echo "export FFTW2=\$PSRHOME/fftw-2.1.5" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$FFTW2/install/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$FFTW2/install/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# fitsverify" >> .mysetenv.bash && \
     echo "export FITSVERIFY=\$PSRHOME/fitsverify" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$FITSVERIFY" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# PSRSALSA" >> .mysetenv.bash && \
     echo "export PSRSALSA=\$PSRHOME/psrsalsa" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PSRSALSA/bin" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRSALSA/src/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
-    echo "# PRESTO" >> .mysetenv.bash && \
+
+    echo "# PRESTO 3" >> .mysetenv.bash && \
     echo "export PRESTO=\$PSRHOME/presto" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PRESTO/bin" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PRESTO/lib" >> .mysetenv.bash && \
     echo "export PYTHONPATH=\$PYTHONPATH:\$PRESTO/lib/python" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# psrfits2psrfits" >> .mysetenv.bash && \
     echo "export PSRFITS2PSRFITS=\$PSRHOME/psrfits2psrfits" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PSRFITS2PSRFITS" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# psrfits_utils" >> .mysetenv.bash && \
     echo "export PSRFITS_UTILS=\$PSRHOME/psrfits_utils" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PSRFITS_UTILS/install/bin" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$PSRFITS_UTILS/install/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRFITS_UTILS/install/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# pyslalib" >> .mysetenv.bash && \
     echo "export PYSLALIB=\$PSRHOME/pyslalib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
+
     echo "# coast_guard" >> .mysetenv.bash && \
     echo "export COAST_GUARD=\$PSRHOME/coast_guard" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$COAST_GUARD:\$COAST_GUARD/coast_guard" >> .mysetenv.bash && \
     echo "export COASTGUARD_CFG=\$COAST_GUARD/configurations" >> .mysetenv.bash && \
     echo "export PYTHONPATH=\$PYTHONPATH:\$COAST_GUARD:\$COAST_GUARD/coast_guard" >> .mysetenv.bash && \
+    echo "" >> .mysetenv.bash && \
+
+    echo "#pfits" >> .mysetenv.bash && \
+    echo "export PFITS=\$PSRHOME/pfits" >> .mysetenv.bash && \
+    echo "export PATH=\$PATH:\$PFITS/install/bin" >> .mysetenv.bash && \
+    echo "" >> .mysetenv.bash && \
+
+
+
     echo "# TempoNest" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/home/psr/software/MultiNest/lib" >> .mysetenv.bash && \
-    echo "export CFLAGS=\$CFLAGS -I/home/psr/software/MultiNest/include" >> .mysetenv.bash && \
-    echo "export CPPFLAGS=\$CPPFLAGS -I/home/psr/software/MultiNest/include" >> .mysetenv.bash && \
     echo "export MULTINEST_DIR=\$PSRHOME/MultiNest/lib" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/openmpi/lib/" >> .mysetenv.bash && \
-    /bin/bash -c "source $HOME/.bashrc"
+    echo "source \$HOME/.bashrc" >> $HOME/.zshrc && \
+    /bin/bash -c "source \$HOME/.bashrc"
+
+
 
 # Update database for locate and run sshd server and expose port 22
 USER root
 RUN sed 's/X11Forwarding yes/X11Forwarding yes\nX11UseLocalhost no/' -i /etc/ssh/sshd_config
 RUN updatedb
+RUN chsh -s /bin/zsh
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
