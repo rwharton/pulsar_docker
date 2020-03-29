@@ -276,8 +276,8 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     wget http://ds9.si.edu/download/ubuntu18/ds9.ubuntu18.8.0.1.tar.gz && \
     mkdir $PSRHOME/ds9-7.5 && \
     tar -xvvf ds9.ubuntu18.8.0.1.tar.gz -C $PSRHOME/ds9-7.5 && \
-    wget http://heasarc.gsfc.nasa.gov/FTP/software/lheasoft/fv/fv5.4_pc_linux64.tar.gz && \
-    tar -xvvf fv5.4_pc_linux64.tar.gz -C $PSRHOME && \
+    # wget http://heasarc.gsfc.nasa.gov/FTP/software/lheasoft/fv/fv5.4_pc_linux64.tar.gz && \
+    # tar -xvvf fv5.4_pc_linux64.tar.gz -C $PSRHOME && \
     wget http://www.atnf.csiro.au/people/pulsar/psrcat/downloads/psrcat_pkg.tar.gz && \
     tar -xvf psrcat_pkg.tar.gz -C $PSRHOME && \
     wget http://www.iausofa.org/2017_0420_C/sofa_c-20170420.tar.gz && \
@@ -294,8 +294,8 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     tar -xvvf cloog-0.18.4.tar.gz && \
     wget http://prdownloads.sourceforge.net/ctags/ctags-5.8.tar.gz && \
     tar -xvvf ctags-5.8.tar.gz && \
-    wget http://downloads.sourceforge.net/project/geographiclib/distrib/GeographicLib-1.48.tar.gz && \
-    tar -xvvf GeographicLib-1.48.tar.gz && \
+    # wget http://downloads.sourceforge.net/project/geographiclib/distrib/GeographicLib-1.48.tar.gz && \
+    # tar -xvvf GeographicLib-1.48.tar.gz && \
     wget http://www.hdfgroup.org/ftp/HDF5/projects/jpss/h5edit/h5edit-1.3.1.tar.gz && \
     tar -xvvf h5edit-1.3.1.tar.gz && \
     wget http://www.leptonica.org/source/leptonica-1.79.0.tar.gz && \
@@ -304,8 +304,8 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     tar -xvvf tvmet-1.7.2.tar.bz2 && \
     wget http://www.fftw.org/fftw-2.1.5.tar.gz && \
     tar -xvvf fftw-2.1.5.tar.gz && \
-    wget http://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-4.18.tar.gz && \
-    tar -xvvf fitsverify-4.18.tar.gz && \
+    # wget http://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-4.18.tar.gz && \
+    # tar -xvvf fitsverify-4.18.tar.gz && \
     wget http://bitbucket.org/eigen/eigen/get/3.3.4.tar.bz2 && \
     tar -xvvf 3.3.4.tar.bz2 && \
     wget http://downloads.sourceforge.net/project/healpix/Healpix_3.31/Healpix_3.31_2016Aug26.tar.gz && \
@@ -354,8 +354,8 @@ RUN ./configure --prefix=$CALCEPH/install --with-pic --enable-shared --enable-st
 # ds9
 ENV PATH $PATH:$PSRHOME/ds9-7.5
 
-# fv
-ENV PATH $PATH:$PSRHOME/fv5.4
+# # fv
+# ENV PATH $PATH:$PSRHOME/fv5.4
 
 # psrcat
 ENV PSRCAT_FILE=$PSRHOME"/psrcat_tar/psrcat.db" \
@@ -628,18 +628,18 @@ RUN ./configure --prefix=$CTAGS/install && \
     make && \
     make install 
 
-#GeographicLib
-ENV GEOLIB=$PSRHOME"/GeographicLib-1.48" \
-    PATH=$PATH:$PSRHOME"/GeographicLib-1.48/install/bin" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/GeographicLib-1.48/install/include" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/GeographicLib-1.48/install/lib"
-WORKDIR $GEOLIB
-RUN ./configure --prefix=$GEOLIB/install && \
-    make -j $(nproc) && \
-    make && \
-    make install
-WORKDIR $GEOLIB/python
-RUN python setup.py install --user --record=list.txt
+# #GeographicLib
+# ENV GEOLIB=$PSRHOME"/GeographicLib-1.48" \
+#     PATH=$PATH:$PSRHOME"/GeographicLib-1.48/install/bin" \
+#     C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/GeographicLib-1.48/install/include" \
+#     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/GeographicLib-1.48/install/lib"
+# WORKDIR $GEOLIB
+# RUN ./configure --prefix=$GEOLIB/install && \
+#     make -j $(nproc) && \
+#     make && \
+#     make install
+# WORKDIR $GEOLIB/python
+# RUN python setup.py install --user --record=list.txt
 
 # # h5edit
 # ENV H5EDIT=$PSRHOME"/h5edit-1.3.1" \
@@ -681,10 +681,10 @@ RUN ./configure --prefix=$FFTW2/install --enable-threads --enable-float && \
     make install
 
 # fitsverify
-ENV FITSVERIFY=$PSRHOME"/fitsverify" \
-    PATH=$PATH:$PSRHOME"/fitsverify"
-WORKDIR $FITSVERIFY
-RUN gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -I/usr/include -L/usr/lib/x86_64-linux-gnu -lcfitsio -lm -lnsl
+# ENV FITSVERIFY=$PSRHOME"/fitsverify" \
+#     PATH=$PATH:$PSRHOME"/fitsverify"
+# WORKDIR $FITSVERIFY
+# RUN gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -I/usr/include -L/usr/lib/x86_64-linux-gnu -lcfitsio -lm -lnsl
 
 # PSRSALSA
 ENV PSRSALSA=$PSRHOME"/psrsalsa" \
@@ -695,19 +695,22 @@ RUN sed -i.backup -e's/GSLFLAGS =.*/GSLFLAGS = -DGSL_VERSION_NUMBER=203/' Makefi
     make -j $(nproc) && \
     make
 
+RUN echo "hi"
 
-# PRESTO 3
+# PRESTO 2.1
 ENV PRESTO=$PSRHOME"/presto" \
     PATH=$PATH:$PSRHOME"/presto/bin" \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/presto/lib" \
     PYTHONPATH=$PYTHONPATH:$PSRHOME"/presto/lib/python"
+WORKDIR $PRESTO
+RUN git checkout 3a2b1a1f1ed7b30079bc86e0a669faf2c68cb455    
 WORKDIR $PRESTO/src
 #RUN make makewisdom
 RUN make prep && \
-    make -j $(nproc) && \
+   make && \
     make && \
     make mpi
-WORKDIR $PRESTO
+WORKDIR $PRESTO/python
 RUN pip install .
 
 
@@ -968,12 +971,12 @@ RUN echo "" >> .bashrc && \
     echo "export PATH=\$PATH:\$CTAGS/install/bin" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
 
-    echo "# GeographicLib" >> .mysetenv.bash && \
-    echo "export GEOLIB=\$PSRHOME/GeographicLib-1.48" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$GEOLIB/install/bin" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$GEOLIB/install/include" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$GEOLIB/install/lib" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
+    # echo "# GeographicLib" >> .mysetenv.bash && \
+    # echo "export GEOLIB=\$PSRHOME/GeographicLib-1.48" >> .mysetenv.bash && \
+    # echo "export PATH=\$PATH:\$GEOLIB/install/bin" >> .mysetenv.bash && \
+    # echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$GEOLIB/install/include" >> .mysetenv.bash && \
+    # echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$GEOLIB/install/lib" >> .mysetenv.bash && \
+    # echo "" >> .mysetenv.bash && \
 
     # echo "# h5edit" >> .mysetenv.bash && \
     # echo "export H5EDIT=\$PSRHOME/h5edit-1.3.1" >> .mysetenv.bash && \
@@ -1010,7 +1013,7 @@ RUN echo "" >> .bashrc && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRSALSA/src/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
 
-    echo "# PRESTO 3" >> .mysetenv.bash && \
+    echo "# PRESTO 2.1" >> .mysetenv.bash && \
     echo "export PRESTO=\$PSRHOME/presto" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PRESTO/bin" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PRESTO/lib" >> .mysetenv.bash && \
