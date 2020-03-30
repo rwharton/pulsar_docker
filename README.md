@@ -1,63 +1,21 @@
 # pulsar_docker
 Builds a docker image for a pulsar analysis packages and few extras on Ubuntu 18.04 LTS. Forked from https://github.com/mserylak/pulsar_docker
 
-# Includes
-- calceph
-- ds9
-- fv
-- psrcat
-- tempo
-- tempo2
-- psrxml
-- psrchive
-- sofa c-library
-- sofa fortran-library
-- sigproc
-- sigpyproc
-- h5check
-- dal
-- dspsr
-- geographicLib
-- h5edit
-- fitsverify
-- psrsalsa
-- pypsrfits
-- presto
-- wapp2psrfits
-- psrfits2psrfits
-- psrfits_utils
-- pyslalib
-- coast_guard
-- setuptools
-- numpy
-- scipy
-- pandas
-- h5py
-- fitsio
-- astropy
-- astroplan
-- pytz
-- paramz
-- aplpy
-- pyfits
-- peakutils
-- pymc
-- matplotlib
-- seaborn
-- lmfit
-- pyephem
-- and all their dependencies (pgplot5, fftw, etc)
-
 You'll find all pulsar software in /home/psr/software, environment variables are set according to ~/.mysetenv.bash file.
 
-# Using
 To build:
 
     docker build -t pulsar_docker .
+    
+Alternatively, you can pull the latest build from docker hub as:
 
-To run image:
+    docker pull vivekvenkris/vivek_pulsar_docker:latest
 
-    docker run -it pulsar_docker /bin/bash
+# USE in Docker
+
+To run image in docker:
+
+    docker run -it pulsar_docker /bin/bash 
 
 To mount data directory into the docker container with the -v flag:
 
@@ -72,6 +30,16 @@ To run the image with X11 and mounted data directory, run the container first:
 Check if container is running with docker ps -a. You can log in using **psr** as password:
 
     ssh -XY psr@localhost -p 2222
+
+# USE in Singularity:
+
+To use the docker image in singularity, you probably need to change the CACHE and TMP dirs that Singularity uses or you will get a ```OUT OF SPACE``` error. Set the following environment variables to a directory of your choice. 
+
+    export SINGULARITY_LOCALCACHEDIR=/fpra/mkat/01/users/vivek
+    export SINGULARITY_CACHEDIR=/fpra/mkat/01/users/vivek
+    export SINGULARITY_TMPDIR=/fpra/mkat/01/users/vivek
+
+    singularity shell docker://vivekvenkris/vivek_pulsar_docker:latest
 
 # Issues
 Report problems to vkrishnan@mpifr-bonn.mpg.de
