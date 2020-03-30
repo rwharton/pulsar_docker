@@ -11,7 +11,7 @@ Alternatively, you can pull the latest build from docker hub as:
 
     docker pull vivekvenkris/vivek_pulsar_docker:latest
 
-# USE in Docker
+# USE in Docker:
 
 To run image in docker:
 
@@ -33,7 +33,7 @@ Check if container is running with docker ps -a. You can log in using **psr** as
 
 # USE in Singularity:
 
-To use the docker image in singularity, you probably need to change the CACHE and TMP dirs that Singularity uses or you will get a ```OUT OF SPACE``` error. Set the following environment variables to a directory of your choice. 
+To use the docker image in singularity, you probably need to change the CACHE and TMP dirs that Singularity uses or you will get a ```NO SPACE LEFT ON DEVICE``` error. Set the following environment variables to a directory of your choice. 
 
     export SINGULARITY_LOCALCACHEDIR=/fpra/mkat/01/users/vivek
     export SINGULARITY_CACHEDIR=/fpra/mkat/01/users/vivek
