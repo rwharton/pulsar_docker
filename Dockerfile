@@ -329,6 +329,7 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     git clone https://github.com/straten/epsic.git && \
     git clone https://github.com/JohannesBuchner/MultiNest  && \
     git clone https://github.com/aparthas3112/TempoNest.git && \
+    git clone https://github.com/vivekvenkris/plotres.git && \
     git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto" 
 
 
@@ -785,6 +786,16 @@ RUN make && mv src/libchord.a $PSRHOME/MultiNest/lib/
 WORKDIR $PSRHOME/TempoNest
 RUN sh ./autogen.sh && ./configure --prefix=$PSRHOME/TempoNest && make temponest && make temponest-install
 
+
+#plotres
+ENV PLOTRES=$PSRHOME"/plotres"
+WORKDIR $PLOTRES
+RUN gfortran -o plotres plotres.f -lcpgplot -lpgplot -lX11 -lm && \
+    gfortran -o plotres_ps plotres_ps.f -lcpgplot -lpgplot -lX11 -lm
+
+ENV PATH=$PATH:"$PLOTRES/"
+
+
 # Clean downloaded source codes
 WORKDIR $PSRHOME
 RUN rm -rf ./*.bz2 ./*.gz ./*.xz ./*.ztar ./*.zip
@@ -1046,13 +1057,17 @@ RUN echo "" >> .bashrc && \
     echo "" >> .mysetenv.bash && \
 
 
-
     echo "# TempoNest" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/home/psr/software/MultiNest/lib" >> .mysetenv.bash && \
     echo "export MULTINEST_DIR=\$PSRHOME/MultiNest/lib" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/openmpi/lib/" >> .mysetenv.bash && \
+
+    echo "# Plotres" >> .mysetenv.bash && \
+    echo "export PLOTRES=\$PSRHOME/plotres" >> .mysetenv.bash && \
+    echo "export PATH=\$PATH:\$PLOTRES/" >> .mysetenv.bash && \
+
     echo "source \$HOME/.bashrc" >> $HOME/.zshrc && \
-    /bin/bash -c "source \$HOME/.bashrc"
+    /bin/bash -c "source \$HOME/.bashrc" 
 
 
 
