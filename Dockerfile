@@ -330,6 +330,7 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     git clone https://github.com/JohannesBuchner/MultiNest  && \
     git clone https://github.com/aparthas3112/TempoNest.git && \
     git clone https://github.com/vivekvenkris/plotres.git && \
+    git clone https://github.com/vivekvenkris/fitorbit.git &&\
     git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto" 
 
 
@@ -795,6 +796,13 @@ RUN gfortran -o plotres plotres.f -lcpgplot -lpgplot -lX11 -lm && \
 
 ENV PATH=$PATH:"$PLOTRES/"
 
+#fitorbit
+ENV FITORBIT=$PSRHOME"/fitorbit"
+WORKDIR $FITORBIT
+RUN ./install.sh
+ENV PATH=$PATH:"$FITORBIT/bin"
+
+
 
 # Clean downloaded source codes
 WORKDIR $PSRHOME
@@ -1066,7 +1074,19 @@ RUN echo "" >> .bashrc && \
     echo "export PLOTRES=\$PSRHOME/plotres" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$PLOTRES/" >> .mysetenv.bash && \
 
+    echo "# Fitorbit" >> .mysetenv.bash && \
+    echo "export FITORBIT=\$PSRHOME/fitorbit" >> .mysetenv.bash && \
+    echo "export PATH=\$PATH:\$FITORBIT/bin" >> .mysetenv.bash && \
+
+    echo "alias emacs='emacs -nw'" >> .mysetenv.bash  && \
+    echo "alias emcas='emacs'" >> .mysetenv.bash  && \
+    echo "alias mroe='more'" >> .mysetenv.bash  && \
+
+
     echo "source \$HOME/.bashrc" >> $HOME/.zshrc && \
+
+
+
     /bin/bash -c "source \$HOME/.bashrc" 
 
 
