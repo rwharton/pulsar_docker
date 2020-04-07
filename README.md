@@ -39,7 +39,7 @@ To use the docker image in singularity, you probably need to change the CACHE an
     export SINGULARITY_CACHEDIR=/fpra/mkat/01/users/vivek
     export SINGULARITY_TMPDIR=/fpra/mkat/01/users/vivek
 
-    singularity shell docker://vivekvenkris/vivek_pulsar_docker:latest
+    singularity shell -B <host_directory> docker://vivekvenkris/vivek_pulsar_docker:latest
 
 # Issues
 Report problems to vkrishnan@mpifr-bonn.mpg.de
