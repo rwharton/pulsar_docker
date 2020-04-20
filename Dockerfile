@@ -219,7 +219,8 @@ RUN apt-get -y install \
     python3\
     libopenblas-base\
     libopenblas-dev\
-    pax-utils 
+    pax-utils \
+    rsync
 
 # Install python modules
 
@@ -1077,6 +1078,7 @@ RUN echo "" >> .bashrc && \
     echo "# Fitorbit" >> .mysetenv.bash && \
     echo "export FITORBIT=\$PSRHOME/fitorbit" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$FITORBIT/bin" >> .mysetenv.bash && \
+    echo "export fitorbitdir=\$PSRHOME/fitorbit/src/" >> .mysetenv.bash && \
 
     echo "alias emacs='emacs -nw'" >> .mysetenv.bash  && \
     echo "alias emcas='emacs'" >> .mysetenv.bash  && \
@@ -1093,8 +1095,13 @@ RUN echo "" >> .bashrc && \
 
 # Update database for locate and run sshd server and expose port 22
 USER root
-RUN sed 's/X11Forwarding yes/X11Forwarding yes\nX11UseLocalhost no/' -i /etc/ssh/sshd_config
+RUN sed 's/X11Forwarding yes/X11Forwarding yes\nX11UseLocalhost no/' -i /etc/ssh/sshd_config && \
+    echo "if [ -e \/home/psr/.mysetenv.bash ]; then" >> .bashrc && \
+    echo "   source \/home/psr/.mysetenv.bash" >> .bashrc && \
+    echo "fi" >> .bashrc && \
+    echo "" >> .bashrc && \
+    echo "alias rm='rm -i'" >> .bashrc && \
+    echo "alias mv='mv -i'" >> .bashrc && \
 RUN updatedb
-RUN chsh -s /bin/zsh
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
