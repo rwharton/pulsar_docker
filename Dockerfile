@@ -10,7 +10,7 @@
 
 
 
-FROM ubuntu:bionic-20200112
+FROM ubuntu:bionic
 
 MAINTAINER Vivek Venkatraman Krishnan "vkrishnan@mpifr-bonn.mpg.de"
 
