@@ -1101,7 +1101,7 @@ RUN sed 's/X11Forwarding yes/X11Forwarding yes\nX11UseLocalhost no/' -i /etc/ssh
     echo "fi" >> .bashrc && \
     echo "" >> .bashrc && \
     echo "alias rm='rm -i'" >> .bashrc && \
-    echo "alias mv='mv -i'" >> .bashrc && \
+    echo "alias mv='mv -i'" >> .bashrc 
 RUN updatedb
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]
