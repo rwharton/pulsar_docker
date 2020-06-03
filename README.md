@@ -13,6 +13,8 @@ Alternatively, you can pull the latest build from docker hub as:
 
 # USE in Docker:
 
+If you have built it manually, you can use the following instructions as-is. If you have pulled it from docker hub, please replace `vivek_pulsar_docker` with `vivekvenkris/vivek_pulsar_docker` everywhere. 
+
 To run image in docker:
 
     docker run -it vivek_pulsar_docker /bin/bash 
