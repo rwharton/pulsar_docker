@@ -281,55 +281,28 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     tar -xvvf fv5.4_pc_linux64.tar.gz -C $PSRHOME && \
     wget http://www.atnf.csiro.au/people/pulsar/psrcat/downloads/psrcat_pkg.tar.gz && \
     tar -xvf psrcat_pkg.tar.gz -C $PSRHOME && \
-    wget http://www.iausofa.org/2017_0420_C/sofa_c-20170420.tar.gz && \
-    tar -xvvf sofa_c-20170420.tar.gz && \
-    wget http://www.iausofa.org/2017_0420_F/sofa_f-20170420.tar.gz && \
-    tar -xvvf sofa_f-20170420.tar.gz && \
     wget http://www.hdfgroup.org/ftp/lib-external/szip/2.1.1/src/szip-2.1.1.tar.gz && \
     tar -xvvf szip-2.1.1.tar.gz && \
     wget https://www.hdfgroup.org/ftp/HDF5/tools/h5check/src/h5check-2.0.1.tar.gz && \
     tar -xvvf h5check-2.0.1.tar.gz && \
     wget -U 'Linux' https://bsdforge.com/projects/devel/clig/src/clig-1.9.11.2.tar.xz && \
     tar -xvvf clig-1.9.11.2.tar.xz && \
-    wget http://www.bastoul.net/cloog/pages/download/cloog-0.18.4.tar.gz && \
-    tar -xvvf cloog-0.18.4.tar.gz && \
-    wget http://prdownloads.sourceforge.net/ctags/ctags-5.8.tar.gz && \
-    tar -xvvf ctags-5.8.tar.gz && \
-    wget http://downloads.sourceforge.net/project/geographiclib/distrib/GeographicLib-1.48.tar.gz && \
-    tar -xvvf GeographicLib-1.48.tar.gz && \
-    wget http://www.hdfgroup.org/ftp/HDF5/projects/jpss/h5edit/h5edit-1.3.1.tar.gz && \
-    tar -xvvf h5edit-1.3.1.tar.gz && \
-    wget http://www.leptonica.org/source/leptonica-1.79.0.tar.gz && \
-    tar -xvvf leptonica-1.79.0.tar.gz && \
-    wget http://downloads.sourceforge.net/project/tvmet/Tar.Gz_Bz2%20Archive/1.7.2/tvmet-1.7.2.tar.bz2 && \
-    tar -xvvf tvmet-1.7.2.tar.bz2 && \
-    wget http://www.fftw.org/fftw-2.1.5.tar.gz && \
-    tar -xvvf fftw-2.1.5.tar.gz && \
-    wget http://heasarc.gsfc.nasa.gov/docs/software/ftools/fitsverify/fitsverify-4.18.tar.gz && \
-    tar -xvvf fitsverify-4.18.tar.gz && \
-    wget http://bitbucket.org/eigen/eigen/get/3.3.4.tar.bz2 && \
-    tar -xvvf 3.3.4.tar.bz2 && \
-    wget http://downloads.sourceforge.net/project/healpix/Healpix_3.31/Healpix_3.31_2016Aug26.tar.gz && \
-    tar -xvvf Healpix_3.31_2016Aug26.tar.gz && \
     git clone https://github.com/SixByNine/psrxml.git && \
     git clone https://bitbucket.org/psrsoft/tempo2.git && \
     git clone https://git.code.sf.net/p/tempo/tempo && \
     git clone https://git.code.sf.net/p/psrchive/code psrchive && \
     git clone https://github.com/SixByNine/sigproc.git && \
     git clone https://github.com/ewanbarr/sigpyproc.git && \
-    git clone https://github.com/nextgen-astrodata/DAL.git && \
     git clone https://git.code.sf.net/p/dspsr/code dspsr && \
     git clone https://github.com/weltevrede/psrsalsa.git && \
     git clone https://github.com/scottransom/presto.git && \
     git clone https://github.com/scottransom/psrfits2psrfits.git && \
-    git clone https://github.com/scottransom/psrfits_utils.git && \
+    git clone https://github.com/gdesvignes/psrfits_utils.git && \
     git clone https://github.com/scottransom/pyslalib.git && \
-    git clone https://github.com/mserylak/coast_guard.git && \
-    git clone https://github.com/ajameson/pfits.git && \
-    git clone git://git.code.sf.net/p/psrdada/code && \
     git clone https://github.com/straten/epsic.git && \
     git clone https://github.com/JohannesBuchner/MultiNest  && \
-    git clone https://github.com/aparthas3112/TempoNest.git && \
+    git clone https://github.com/PolyChord/PolyChordLite.git && \
+    git clone https://github.com/gdesvignes/TempoNest.git && \
     git clone https://github.com/vivekvenkris/plotres.git && \
     git clone https://github.com/vivekvenkris/fitorbit.git &&\
     git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto" 
@@ -406,67 +379,6 @@ RUN touch meerkat2gps.clk && \
     echo "50155.00000 0.0" >> meerkat2gps.clk && \
     echo "58000.00000 0.0" >> meerkat2gps.clk
 
-# Eigen 3
-ENV EIGEN3=$PSRHOME"/eigen-eigen-5a0156e40feb" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/eigen-eigen-5a0156e40feb/install/include/eigen3" \
-    PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PSRHOME"/eigen-eigen-5a0156e40feb/install"
-WORKDIR $EIGEN3
-RUN mkdir $EIGEN3/install
-WORKDIR $EIGEN3/install
-RUN cmake -DCMAKE_INSTALL_PREFIX=$EIGEN3/install .. &&\
-    make install
-
-# HEALPix
-ENV HEALPIX=$PSRHOME"/Healpix_3.31" \
-    PATH=$PATH:$PSRHOME"/Healpix_3.31/bin" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/Healpix_3.31/lib" \
-    PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PSRHOME"/Healpix_3.31/lib" \
-    HEALPIX_TARGET="optimized_gcc"
-WORKDIR $HEALPIX
-# A fix to avoid using highly interactive HEALPix configure script (seriously, why make such script?).
-RUN mkdir bin lib include && \
-    cp Makefile.in Makefile && \
-    awk '!x{x=sub("ALL.*=.*c-void cpp-void f90-void healpy-void.*","ALL = c-all cpp-all f90-all healpy-void")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("TESTS.*=.*c-void cpp-void f90-void healpy-void.*","TESTS = c-test cpp-test f90-test healpy-void")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("CLEAN.*=.*c-void cpp-void f90-void healpy-void.*","CLEAN = c-clean cpp-clean f90-clean healpy-void")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("TIDY.*=.*c-void cpp-void f90-void healpy-void.*","TIDY = c-tidy cpp-tidy f90-tidy healpy-void")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("DISTCLEAN.*=.*c-void cpp-void f90-void healpy-void.*","DISTCLEAN = c-distclean cpp-distclean f90-distclean healpy-void")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("HEALPIX=","HEALPIX = '"$HEALPIX"'")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_BINDIR.*=.*","F90_BINDIR = '"$HEALPIX"'/bin")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_INCDIR.*=.*","F90_INCDIR = '"$HEALPIX"'/include")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_LIBDIR.*=.*","F90_LIBDIR = '"$HEALPIX"'/lib")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("FITSDIR.*=.*","FITSDIR = /usr/lib/x86_64-linux-gnu")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("LIBFITS.*=.*","LIBFITS = cfitsio")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_BUILDDIR.*=.*","F90_BUILDDIR = '"$HEALPIX"'/build")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_FFTSRC.*=.*","F90_FFTSRC = healpix_fft")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_FC.*=.*","F90_FC = gfortran")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_FFLAGS.*=.*","F90_FFLAGS = -O3 -I$(F90_INCDIR) -DGFORTRAN -fno-second-underscore -fPIC")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_CC.*=.*","F90_CC = gcc")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_CFLAGS.*=.*","F90_CFLAGS = -O3 -std=c99 -DgFortran -fPIC")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_LDFLAGS.*=.*","F90_LDFLAGS = -L$(F90_LIBDIR) -L$(FITSDIR) -lhealpix -lhpxgif -l$(LIBFITS) -Wl,-R$(FITSDIR)")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_AR.*=.*","F90_AR = ar -rsv")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_I8FLAG.*=.*","F90_I8FLAG = -fdefault-integer-8")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_LIBSUFFIX.*=.*","F90_LIBSUFFIX = .a")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_PGFLAG.*=.*","F90_PGFLAG = -DPGPLOT")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_PGLIBS.*=.*","F90_PGLIBS = -L/usr/local/pgplot -lpgplot -L/usr/X11R6/lib -lX11")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_MOD.*=.*","F90_MOD = mod")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_MODDIR.*=.*","F90_MODDIR = \"-J\"")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("F90_OS.*=.*","F90_OS = Linux")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_CC.*=.*","C_CC = gcc")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_PIC.*=.*","C_PIC = -fPIC")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_OPT.*=.*","C_OPT = -O2 -Wall")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_LIBDIR.*=.*","C_LIBDIR = '"$HEALPIX"'/lib")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_INCDIR.*=.*","C_INCDIR = '"$HEALPIX"'/include")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_AR.*=.*","C_AR = ar -rsv")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_WITHOUT_CFITSIO.*=.*","C_WITHOUT_CFITSIO = 0")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_CFITSIO_INCDIR.*=.*","C_CFITSIO_INCDIR = /usr/include")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_CFITSIO_LIBDIR.*=.*","C_CFITSIO_LIBDIR = /usr/lib/x86_64-linux-gnu")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_WLRPATH.*=.*","C_WLRPATH = -Wl,-R/usr/lib/x86_64-linux-gnu")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("C_ALL.*=.*","C_ALL = c-static c-shared")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("HEALPIX_TARGET.*=.*","HEALPIX_TARGET = optimized_gcc")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("CFITSIO_EXT_LIB.*=.*","CFITSIO_EXT_LIB = -L/usr/lib/x86_64-linux-gnu -lcfitsio")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    awk '!x{x=sub("CFITSIO_EXT_INC.*=.*","CFITSIO_EXT_INC = -I/usr/include")}1' Makefile > temp.tmp && mv temp.tmp Makefile && \
-    make -j $(nproc)
 
 ENV EPSIC=$PSRHOME"/epsic"
 WORKDIR $EPSIC/src
@@ -505,22 +417,6 @@ RUN $PSRCHIVE/bin/psrchive_config >> .psrchive.cfg && \
     sed -i 's/# Predictor::policy = ephem/Predictor::policy = default/g' .psrchive.cfg && \
     sed -i 's/# WeightedFrequency::round_to_kHz = 1/WeightedFrequency::round_to_kHz = 0/g' .psrchive.cfg
 
-# SOFA C-library
-ENV SOFA=$PSRHOME"/sofa" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/sofa/20170420/c/install/include" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/sofa/20170420/c/install/lib"
-WORKDIR $SOFA/20170420/c/src
-RUN sed -i 's|INSTALL_DIR = $(HOME)|INSTALL_DIR = $(SOFA)/20170420/c/install|g' makefile && \
-    make && \
-    make test
-
-# SOFA FORTRAN-library
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/sofa/20170420/f77/install/lib"
-WORKDIR $SOFA/20170420/f77/src
-RUN sed -i 's|INSTALL_DIR = $(HOME)|INSTALL_DIR = $(SOFA)/20170420/f77/install|g' makefile && \
-    make && \
-    make test
-
 # SIGPROC
 ENV SIGPROC=$PSRHOME"/sigproc" \
     PATH=$PATH:$SIGPROC"/install/bin" \
@@ -540,53 +436,6 @@ ENV SIGPYPROC=$PSRHOME"/sigpyproc" \
 WORKDIR $PSRHOME/sigpyproc
 RUN python setup.py install --record list.txt --user
 
-# szlib
-ENV SZIP=$PSRHOME"/szip-2.1.1" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/szip-2.1.1/install/lib" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/szip-2.1.1/install/include"
-WORKDIR $SZIP
-RUN ./configure --prefix=$SZIP/install && \
-    make && \
-    make install
-
-# h5check
-ENV H5CHECK=$PSRHOME"/h5check-2.0.1" \
-    PATH=$PATH:$PSRHOME"/h5check-2.0.1/install/bin"
-WORKDIR $H5CHECK
-RUN ./configure --prefix=$H5CHECK/install && \
-    make && \
-    make install
-
-# DAL
-ENV DAL=$PSRHOME"/DAL" \
-    PATH=$PATH:$PSRHOME/DAL"/install/bin" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME/DAL"/install/include" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME/DAL"/install/lib"
-WORKDIR $DAL
-RUN mkdir build
-WORKDIR $DAL/build
-RUN cmake .. -DCMAKE_INSTALL_PREFIX=$DAL/install && \
-    make -j $(nproc) && \
-    make && \
-    make install
-
-
-ENV PSRDADA=$PSRHOME"/psrdada" \
-    PATH=$PATH:$PSRHOME"/psrdada/install/bin" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/psrdada/install/lib" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/psrdada/install/include" \
-    CPPFLAGS="$CPPFLAGS -I ${PSRHOME}/psrdada/install/include -I ${PSRHOME}/epsic/install/include/epsic"  \
-    CFLAGS="$CFLAGS -I ${PSRHOME}/psrdada/install/include -I ${PSRHOME}/epsic/install/include/epsic" 
-
-#psrdada
-RUN     mv $PSRHOME/code $PSRDADA
-WORKDIR $PSRDADA
-RUN ./bootstrap && ./configure --prefix=$PSRDADA/install --enable-shared && \
-        make -j $(nproc) &&\
-        make &&\
-        make install
-
-ENV PATH=$PATH:"$PSRDADA/install/bin"
 
 # DSPSR
 ENV DSPSR=$PSRHOME"/dspsr" \
@@ -610,84 +459,6 @@ WORKDIR $CLIG
 RUN sed -i 's|prefix =/usr|prefix=$(CLIG)/instal|g' makefile && \
     make && \
     make install
-
-# CLooG
-ENV CLOOG=$PSRHOME"/cloog-0.18.4" \
-    PATH=$PATH:$PSRHOME"/cloog-0.18.4/install/bin" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/cloog-0.18.4/install/include" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/cloog-0.18.4/install/lib"
-WORKDIR $CLOOG
-RUN ./configure --prefix=$CLOOG/install && \
-    make -j $(nproc) && \
-    make && \
-    make install
-
-# Ctags
-ENV CTAGS=$PSRHOME"/ctags-5.8" \
-    PATH=$PATH:$PSRHOME"/ctags-5.8/install/bin"
-WORKDIR $CTAGS
-RUN ./configure --prefix=$CTAGS/install && \
-    make -j $(nproc) && \
-    make && \
-    make install 
-
-#GeographicLib
-ENV GEOLIB=$PSRHOME"/GeographicLib-1.48" \
-    PATH=$PATH:$PSRHOME"/GeographicLib-1.48/install/bin" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/GeographicLib-1.48/install/include" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/GeographicLib-1.48/install/lib"
-WORKDIR $GEOLIB
-RUN ./configure --prefix=$GEOLIB/install && \
-    make -j $(nproc) && \
-    make && \
-    make install
-WORKDIR $GEOLIB/python
-RUN python setup.py install --user --record=list.txt
-
-# # h5edit
-# ENV H5EDIT=$PSRHOME"/h5edit-1.3.1" \
-#     PATH=$PATH:$PSRHOME"/h5edit-1.3.1/install/bin"
-# WORKDIR $H5EDIT
-# RUN ./configure --prefix=$H5EDIT/install CFLAGS="-Doff64_t=__off64_t" LDFLAGS="-L/usr/lib/x86_64-linux-gnu/hdf5/serial" LIBS="-lhdf5 -lhdf5_hl" CPPFLAGS=-I/usr/include/hdf5/serial && \
-#     make -j $(nproc) && \
-#     make && \
-#     make install
-
-# Leptonica
-ENV LEPTONICA=$PSRHOME"/leptonica-1.79.0" \
-    PATH=$PATH:$PSRHOME"/leptonica-1.79.0/install/bin" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/leptonica-1.79.0/install/include" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/leptonica-1.79.0/install/lib"
-WORKDIR $LEPTONICA
-RUN ./configure --prefix=$LEPTONICA/install && \
-    make && \
-    make install
-
-# tvmet
-ENV TVMET=$PSRHOME"/tvmet-1.7.2" \
-    PATH=$PATH:$PSRHOME"/tvmet-1.7.2/install/bin" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/tvmet-1.7.2/install/include"
-WORKDIR $TVMET
-RUN ./configure --prefix=$TVMET/install && \
-    make -j $(nproc) && \
-    make && \
-    make install
-
-# FFTW2
-ENV FFTW2=$PSRHOME"/fftw-2.1.5" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/fftw-2.1.5/install/include" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/fftw-2.1.5/install/lib"
-WORKDIR $FFTW2
-RUN ./configure --prefix=$FFTW2/install --enable-threads --enable-float && \
-    make -j $(nproc) && \
-    make && \
-    make install
-
-# fitsverify
-ENV FITSVERIFY=$PSRHOME"/fitsverify" \
-    PATH=$PATH:$PSRHOME"/fitsverify"
-WORKDIR $FITSVERIFY
-RUN gcc -o fitsverify ftverify.c fvrf_data.c fvrf_file.c fvrf_head.c fvrf_key.c fvrf_misc.c -DSTANDALONE -I/usr/include -L/usr/lib/x86_64-linux-gnu -lcfitsio -lm -lnsl
 
 # PSRSALSA
 ENV PSRSALSA=$PSRHOME"/psrsalsa" \
@@ -740,24 +511,6 @@ ENV PYSLALIB=$PSRHOME"/pyslalib"
 WORKDIR $PYSLALIB
 RUN python setup.py install --record list.txt --user
 
-# coast_guard
-ENV COAST_GUARD=$PSRHOME"/coast_guard" \
-    PATH=$PATH:$PSRHOME"/coast_guard":$PSRHOME"/coast_guard/coast_guard" \
-    COASTGUARD_CFG=$PSRHOME"/coast_guard/configurations" \
-    PYTHONPATH=$PYTHONPATH:$PSRHOME"/coast_guard":$PSRHOME"/coast_guard/coast_guard"
-
-
-
-#pfits
-ENV PFITS=$PSRHOME"/pfits"  
-WORKDIR $PFITS
-RUN ./bootstrap && ./configure --prefix="$PFITS/install" && \
-    make  -j $(nproc) && \
-    make && \
-    make install
-
-ENV PATH=$PATH:"$PFITS/install/bin"
-
 
 # #topcat
 # WORKDIR $PSRHOME/topcat
@@ -772,6 +525,10 @@ zsh -c 'setopt EXTENDED_GLOB && for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runco
 RUN curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh && \
 curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
 
+# PolyChordLite
+WORKDIR $PSRHOME/PolyChordLite
+RUN make all
+ENV PC_DIR="$PSRHOME/PolyChordLite/lib"
 
 #Installing TempoNest and relevant dependencies
 WORKDIR $PSRHOME
@@ -782,8 +539,8 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$PSRHOME/MultiNest/lib":"/usr/lib/x86_64-l
     CPPFLAGS="$CPPFLAGS -I$PSRHOME/MultiNest/include" \
     MULTINEST_DIR="$PSRHOME/MultiNest/lib"
 
-WORKDIR $PSRHOME/TempoNest/PolyChord
-RUN make && mv src/libchord.a $PSRHOME/MultiNest/lib/
+#WORKDIR $PSRHOME/TempoNest/PolyChord
+#RUN make && mv src/libchord.a $PSRHOME/MultiNest/lib/
 
 WORKDIR $PSRHOME/TempoNest
 RUN sh ./autogen.sh && ./configure --prefix=$PSRHOME/TempoNest && make temponest && make temponest-install
@@ -819,6 +576,7 @@ RUN echo "" >> .bashrc && \
     echo "" >> .bashrc && \
     echo "alias rm='rm -i'" >> .bashrc && \
     echo "alias mv='mv -i'" >> .bashrc && \
+    echo "alias ldc='ls -lrt'" >> .bashrc && \
     echo "# Set up PS1" >> .mysetenv.bash && \
     echo "export PS1=\"\u@\h [\$(date +%d\ %b\ %Y\ %H:%M)] \w> \"" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
@@ -887,20 +645,6 @@ RUN echo "" >> .bashrc && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$TEMPO2/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
 
-    echo "# Eigen 3" >> .mysetenv.bash && \
-    echo "export EIGEN3=\$PSRHOME/eigen-eigen-5a0156e40feb" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$EIGEN3/install/include/eigen3" >> .mysetenv.bash && \
-    echo "export PKG_CONFIG_PATH=\$PKG_CONFIG_PATH:\$EIGEN3/install" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# HEALPix" >> .mysetenv.bash && \
-    echo "export HEALPIX=\$PSRHOME/Healpix_3.31" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$HEALPIX/bin" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HEALPIX/lib" >> .mysetenv.bash && \
-    echo "export PKG_CONFIG_PATH=\$PKG_CONFIG_PATH:\$HEALPIX/lib" >> .mysetenv.bash && \
-    echo "export HEALPIX_TARGET=optimized_gcc" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
     echo "# EPSIC" >> .mysetenv.bash && \
     echo "export EPSIC=\$PSRHOME/epsic" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRHOME/epsic/install/lib" >> .mysetenv.bash && \
@@ -912,16 +656,6 @@ RUN echo "" >> .bashrc && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$PSRCHIVE/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRCHIVE/lib" >> .mysetenv.bash && \
     echo "export PYTHONPATH=\$PYTHONPATH:\$PSRCHIVE/lib/python2.7/site-packages" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# SOFA C-library" >> .mysetenv.bash && \
-    echo "export SOFA=\$PSRHOME/sofa" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$SOFA/20170420/c/install/include" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$SOFA/20170420/c/install/lib" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# SOFA FORTRAN-library" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$SOFA/20170420/f77/install/lib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
 
     echo "# SIGPROC" >> .mysetenv.bash && \
@@ -937,31 +671,6 @@ RUN echo "" >> .bashrc && \
     echo "export SIGPYPROC=\$PSRHOME/sigpyproc" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$SIGPYPROC/lib/c" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
-
-    echo "# szlib" >> .mysetenv.bash && \
-    echo "export SZIP=\$PSRHOME/szip-2.1.1" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$SZIP/install/lib" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$SZIP/install/include" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# h5check" >> .mysetenv.bash && \
-    echo "export H5CHECK=\$PSRHOME/h5check-2.0.1" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$H5CHECK/install/bin" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# DAL" >> .mysetenv.bash && \
-    echo "export DAL=\$PSRHOME/DAL" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$DAL/install/bin" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$DAL/install/include" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$DAL/install/lib" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# PSRDADA" >> .mysetenv.bash && \
-    echo "export PSRDADA=\$PSRHOME/psrdada" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$PSRDADA/install/bin" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRDADA/install/lib" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:$PSRDADA/install/include" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
     
     echo "# DSPSR" >> .mysetenv.bash && \
     echo "export DSPSR=\$PSRHOME/dspsr" >> .mysetenv.bash && \
@@ -974,54 +683,6 @@ RUN echo "" >> .bashrc && \
     echo "export CLIG=\$PSRHOME/clig" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$CLIG/instal/bin" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$CLIG/instal/lib" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# CLooG" >> .mysetenv.bash && \
-    echo "export CLOOG=\$PSRHOME/cloog-0.18.4" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$CLOOG/install/bin" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$CLOOG/install/include" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$CLOOG/install/lib" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# Ctags" >> .mysetenv.bash && \
-    echo "export CTAGS=\$PSRHOME/ctags-5.8" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$CTAGS/install/bin" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# GeographicLib" >> .mysetenv.bash && \
-    echo "export GEOLIB=\$PSRHOME/GeographicLib-1.48" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$GEOLIB/install/bin" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$GEOLIB/install/include" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$GEOLIB/install/lib" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    # echo "# h5edit" >> .mysetenv.bash && \
-    # echo "export H5EDIT=\$PSRHOME/h5edit-1.3.1" >> .mysetenv.bash && \
-    # echo "export PATH=\$PATH:\$H5EDIT/install/bin" >> .mysetenv.bash && \
-    # echo "" >> .mysetenv.bash && \
-
-    echo "# Leptonica" >> .mysetenv.bash && \
-    echo "export LEPTONICA=\$PSRHOME/leptonica-1.74.4" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$LEPTONICA/install/bin" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$LEPTONICA/install/include" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$LEPTONICA/install/lib" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# tvmet" >> .mysetenv.bash && \
-    echo "export TVMET=\$PSRHOME/tvmet-1.7.2" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$TVMET/install/bin" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$TVMET/install/include" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# FFTW2" >> .mysetenv.bash && \
-    echo "export FFTW2=\$PSRHOME/fftw-2.1.5" >> .mysetenv.bash && \
-    echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$FFTW2/install/include" >> .mysetenv.bash && \
-    echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$FFTW2/install/lib" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "# fitsverify" >> .mysetenv.bash && \
-    echo "export FITSVERIFY=\$PSRHOME/fitsverify" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$FITSVERIFY" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
 
     echo "# PSRSALSA" >> .mysetenv.bash && \
@@ -1053,19 +714,6 @@ RUN echo "" >> .bashrc && \
     echo "export PYSLALIB=\$PSRHOME/pyslalib" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
 
-    echo "# coast_guard" >> .mysetenv.bash && \
-    echo "export COAST_GUARD=\$PSRHOME/coast_guard" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$COAST_GUARD:\$COAST_GUARD/coast_guard" >> .mysetenv.bash && \
-    echo "export COASTGUARD_CFG=\$COAST_GUARD/configurations" >> .mysetenv.bash && \
-    echo "export PYTHONPATH=\$PYTHONPATH:\$COAST_GUARD:\$COAST_GUARD/coast_guard" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-    echo "#pfits" >> .mysetenv.bash && \
-    echo "export PFITS=\$PSRHOME/pfits" >> .mysetenv.bash && \
-    echo "export PATH=\$PATH:\$PFITS/install/bin" >> .mysetenv.bash && \
-    echo "" >> .mysetenv.bash && \
-
-
     echo "# TempoNest" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:/home/psr/software/MultiNest/lib" >> .mysetenv.bash && \
     echo "export MULTINEST_DIR=\$PSRHOME/MultiNest/lib" >> .mysetenv.bash && \
@@ -1082,6 +730,7 @@ RUN echo "" >> .bashrc && \
 
     echo "alias emacs='emacs -nw'" >> .mysetenv.bash  && \
     echo "alias emcas='emacs'" >> .mysetenv.bash  && \
+    echo "alias em='emacs'" >> .mysetenv.bash  && \
     echo "alias mroe='more'" >> .mysetenv.bash  && \
 
 
