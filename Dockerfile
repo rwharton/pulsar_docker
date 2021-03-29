@@ -196,6 +196,7 @@ RUN apt-get -y install \
     qt4-linguist-tools \
     qt4-qmake \
     qt4-qtconfig \
+    root \
     screen \
     source-highlight \
     subversion \
@@ -258,7 +259,9 @@ RUN pip install pip -U && \
     pip install scikit-learn -U && \
     pip install corner -U && \
     pip install bokeh -U && \
-    pip install psrqpy -U  
+    pip install psrqpy -U && \
+    pip install uncertainties -U && \
+    pip install dynesty -U
 
 
 # Switch account to psr
@@ -542,8 +545,8 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"$PSRHOME/MultiNest/lib":"/usr/lib/x86_64-l
 #WORKDIR $PSRHOME/TempoNest/PolyChord
 #RUN make && mv src/libchord.a $PSRHOME/MultiNest/lib/
 
-WORKDIR $PSRHOME/TempoNest
-RUN sh ./autogen.sh && ./configure --prefix=$PSRHOME/TempoNest && make temponest && make temponest-install
+#WORKDIR $PSRHOME/TempoNest
+#RUN sh ./autogen.sh && ./configure --prefix=$PSRHOME/TempoNest && make temponest && make temponest-install
 
 
 #plotres
