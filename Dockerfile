@@ -10,9 +10,9 @@
 
 
 
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
-MAINTAINER Vivek Venkatraman Krishnan "vkrishnan@mpifr-bonn.mpg.de"
+MAINTAINER Gregory Desvignes "gdesvignes.astro@gmail.com"
 
 # Suppress debconf warnings
 ENV DEBIAN_FRONTEND noninteractive
@@ -28,8 +28,8 @@ RUN adduser --disabled-password --gecos 'unprivileged user' psr && \
     chown -R psr:psr /home/psr/.ssh
 
 # Create space for ssh deamozshn and update the system
-RUN echo 'deb http://us.archive.ubuntu.com/ubuntu bionic main multiverse' >> /etc/apt/sources.list && \
-echo 'deb http://mirrors.kernel.org/ubuntu/ bionic main multiverse' >> /etc/apt/sources.list && \
+RUN echo 'deb [arch=amd64] http://archive.ubuntu.com/ubuntu focal main multiverse' >> /etc/apt/sources.list && \
+    echo 'deb [arch=amd64] http://mirrors.kernel.org/ubuntu/ focal main multiverse' >> /etc/apt/sources.list && \
     mkdir /var/run/sshd && \
     apt-get -y check && \
     apt-get -y update && \
@@ -81,8 +81,10 @@ RUN apt-get -y install \
     hdfview \
     htop \
     hwloc \
-    ipython \
-    python3-notebook python-notebook jupyter jupyter-core python-ipykernel\
+    python3-ipython \
+    python3-notebook \
+    jupyter \
+    jupyter-core\
     libatlas-base-dev \
     libbison-dev \
     libblas-dev \
@@ -93,22 +95,23 @@ RUN apt-get -y install \
     libcfitsio-bin \
     libcfitsio-dev \
     libcfitsio-doc \
-    libcloog-isl4 \
+    #libcloog-isl4 \
     libcppunit-dev \
     libcppunit-subunit-dev \
     libcppunit-subunit0 \
     libfftw3-3 \
     libfftw3-bin \
-    libfftw3-dbg \
+    #libfftw3-dbg \
     libfftw3-dev \
     libfftw3-double3 \
     libfftw3-long3 \
-    libfftw3-quad3 \
     libfftw3-single3 \
+    #libfftw3-quad3 \
     libfreetype6 \
     libfreetype6-dev \
     libgd-dev \
     libgd3 \
+    libgeos-dev \
     libglib2.0-0 \
     libglib2.0-dev \
     libgmp3-dev \
@@ -133,7 +136,6 @@ RUN apt-get -y install \
     liblua5.3-0 \
     liblua5.3-dev \
     libncurses5-dev \
-    libntrack-qt4-1 \
     libopenblas-base \
     libopenblas-dev \
     libpng++-dev \
@@ -142,35 +144,31 @@ RUN apt-get -y install \
     libpng-dev \
     libpnglite-dev \
     libpth-dev \
-    libqt4-dbus \
-    libqt4-declarative \
-    libqt4-designer \
-    libqt4-dev \
-    libqt4-dev-bin \
-    libqt4-help \
-    libqt4-network \
-    libqt4-opengl \
-    libqt4-opengl-dev \
-    libqt4-qt3support \
-    libqt4-script \
-    libqt4-scripttools \
-    libqt4-sql \
-    libqt4-sql-mysql \
-    libqt4-svg \
-    libqt4-test \
-    libqt4-xml \
-    libqt4-xmlpatterns \
+    libqt5dbus5 \
+    libqt5designer5 \
+    libqt5core5a \
+    libqt5gui5 \
+    libqt5help5 \
+    libqt5network5 \
+    libqt5opengl5 \
+    libqt5script5 \
+    libqt5scripttools5 \
+    libqt5sql5 \
+    libqt5sql5-mysql \
+    libqt5svg5 \
+    libqt5test5 \
+    libqt5xml5 \
+    libqt5xmlpatterns5 \
     libreadline-dev \
     libsocket++-dev \
     libsocket++1 \
     libssl-dev \
     libtool \
     libx11-dev \
-    llvm-4.0 \
-    llvm-4.0-dev \
-    llvm-4.0-doc \
-    llvm-4.0-examples \
-    llvm-4.0-runtime \
+    llvm-6.0 \
+    llvm-6.0-dev \
+    llvm-6.0-examples \
+    llvm-6.0-runtime \
     locate \
     lsof \
     m4 \
@@ -184,19 +182,11 @@ RUN apt-get -y install \
     pbzip2 \
     pgplot5 \
     pkg-config \
-    pyqt4-dev-tools \
-    python \
-    python-dev \
-    python-pip \
-    python-qt4 \
-    python-qt4-dbus \
-    python-qt4-dev \
-    python-tk \
-    qt4-default \
-    qt4-linguist-tools \
-    qt4-qmake \
-    qt4-qtconfig \
-    root \
+    python3 \
+    python3-dev \
+    python3-pip \
+    python3-tk \
+    python3-setuptools \
     screen \
     source-highlight \
     subversion \
@@ -225,43 +215,36 @@ RUN apt-get -y install \
 
 # Install python modules
 
-RUN pip install pip -U && \
-    pip install setuptools -U && \
-    pip install datetime -U && \
-    pip install bitstring -U && \
-    pip install ipython -U && \
-    pip install --ignore-installed jupyter -U && \
-    pip install six -U && \
-    pip install numpy -U && \
-    pip install scipy -U && \
-    pip install pandas -U && \
-    pip install h5py -U && \
-    pip install astropy -U && \
-    pip install astroplan -U && \
-    pip install astropy_helpers -U && \
-    pip install astroquery -U && \
-    pip install pytz -U && \
-    pip install paramz -U && \
-    pip install APLpy -U && \
-    pip install pyfits -U && \
-    pip install cycler -U && \
-    pip install peakutils -U && \
-    pip install matplotlib -U && \
-    pip install seaborn -U && \
-    pip install lmfit -U && \
-    pip install pyephem -U && \
-    pip install h5py -U && \
-    pip install statsmodels -U && \
-    pip install schwimmbad -U && \
-    pip install ChainConsumer -U && \
-    pip install setuptools_scm pep517 -U && \
-    pip install emcee -U && \
-    pip install scikit-learn -U && \
-    pip install corner -U && \
-    pip install bokeh -U && \
-    pip install psrqpy -U && \
-    pip install uncertainties -U && \
-    pip install dynesty -U
+RUN pip3 install pip -U && \
+    pip3 install setuptools -U && \
+    pip3 install datetime -U && \
+    pip3 install bitstring -U && \
+    pip3 install ipython -U && \
+    pip3 install --ignore-installed jupyter -U && \
+    pip3 install six -U && \
+    pip3 install numpy -U && \
+    pip3 install scipy -U && \
+    pip3 install pandas -U && \
+    pip3 install h5py -U && \
+    pip3 install astropy -U && \
+    pip3 install astroplan -U && \
+    pip3 install astropy_helpers -U && \
+    pip3 install astroquery -U && \
+    pip3 install pytz -U && \
+    #pip3 install paramz -U && \
+    pip3 install APLpy -U && \
+    pip3 install pyfits -U && \
+    pip3 install matplotlib -U && \
+    pip3 install pyephem -U && \
+    pip3 install setuptools_scm pep517 -U && \
+    pip3 install emcee -U && \
+    pip3 install scikit-learn -U && \
+    pip3 install corner -U && \
+    pip3 install psrqpy -U && \
+    pip3 install uncertainties -U && \
+    pip3 install getdist -U && \
+    pip3 install dynesty -U && \
+    pip3 install dyPolyChord -U
 
 
 # Switch account to psr
@@ -277,9 +260,9 @@ RUN mkdir -p /home/psr/software
 WORKDIR $PSRHOME
 RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-2.3.2.tar.gz && \
     tar -xvvf calceph-2.3.2.tar.gz -C $PSRHOME && \
-    wget http://ds9.si.edu/download/ubuntu18/ds9.ubuntu18.8.0.1.tar.gz && \
-    mkdir $PSRHOME/ds9-7.5 && \
-    tar -xvvf ds9.ubuntu18.8.0.1.tar.gz -C $PSRHOME/ds9-7.5 && \
+    wget  http://ds9.si.edu/download/ubuntu20/ds9.ubuntu20.8.2.1.tar.gz && \
+    mkdir $PSRHOME/ds9-8.2 && \
+    tar -xvvf ds9.ubuntu20.8.2.1.tar.gz -C $PSRHOME/ds9-8.2 && \
     wget http://heasarc.gsfc.nasa.gov/FTP/software/lheasoft/fv/fv5.4_pc_linux64.tar.gz && \
     tar -xvvf fv5.4_pc_linux64.tar.gz -C $PSRHOME && \
     wget http://www.atnf.csiro.au/people/pulsar/psrcat/downloads/psrcat_pkg.tar.gz && \
@@ -292,7 +275,7 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     tar -xvvf clig-1.9.11.2.tar.xz && \
     git clone https://github.com/SixByNine/psrxml.git && \
     git clone https://bitbucket.org/psrsoft/tempo2.git && \
-    git clone https://git.code.sf.net/p/tempo/tempo && \
+    git clone https://github.com/gdesvignes/tempo.git && \
     git clone https://git.code.sf.net/p/psrchive/code psrchive && \
     git clone https://github.com/SixByNine/sigproc.git && \
     git clone https://github.com/ewanbarr/sigpyproc.git && \
@@ -320,15 +303,15 @@ ENV PGPLOT_DIR="/usr/lib/pgplot5" \
     PGPLOT_DEV="/xs"
 
 # calceph
-ENV CALCEPH=$PSRHOME"/calceph-2.3.2" \
-    PATH=$PATH:$PSRHOME"/calceph-2.3.2/install/bin" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/calceph-2.3.2/install/lib" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/calceph-2.3.2/install/include"
-WORKDIR $CALCEPH
-RUN ./configure --prefix=$CALCEPH/install --with-pic --enable-shared --enable-static --enable-fortran --enable-thread && \
-    make && \
-    make check && \
-    make install
+#ENV CALCEPH=$PSRHOME"/calceph-2.3.2" \
+#    PATH=$PATH:$PSRHOME"/calceph-2.3.2/install/bin" \
+#    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/calceph-2.3.2/install/lib" \
+#    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/calceph-2.3.2/install/include"
+#WORKDIR $CALCEPH
+#RUN ./configure --prefix=$CALCEPH/install --with-pic --enable-shared --enable-static --enable-fortran --enable-thread && \
+#    make && \
+#    make check && \
+#    make install
 
 # ds9
 ENV PATH $PATH:$PSRHOME/ds9-7.5
@@ -371,7 +354,7 @@ WORKDIR $PSRHOME/tempo2
 # A fix to get rid of: returned a non-zero code: 126.
 RUN sync && perl -pi -e 's/chmod \+x/#chmod +x/' bootstrap
 RUN ./bootstrap && \
-    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --with-calceph=$CALCEPH/install/lib --enable-shared --enable-static --with-pic F77=gfortran CPPFLAGS="$CPPFLAGS -I"$CALCEPH"/install/include" LDFLAGS="-L"$CALCEPH"/install/lib" && \
+    ./configure --x-libraries=/usr/lib/x86_64-linux-gnu --enable-shared --enable-static --with-pic F77=gfortran  && \
     make -j $(nproc) && \
     make install && \
     make plugins-install
@@ -402,7 +385,7 @@ ENV PSRCHIVE=$PSRHOME"/psrchive/install" \
     PATH=$PATH:$PSRHOME"/psrchive/install/bin" \
     C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/psrchive/install/include" \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/psrchive/install/lib" \
-    PYTHONPATH=$PYTHONPATH:$PSRHOME"/psrchive/install/lib/python2.7/site-packages"
+    PYTHONPATH=$PYTHONPATH:$PSRHOME"/psrchive/install/lib/python3.8/site-packages"
 
 
 WORKDIR $PSRHOME/psrchive/
@@ -437,7 +420,7 @@ RUN ./bootstrap && \
 ENV SIGPYPROC=$PSRHOME"/sigpyproc" \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/sigpyproc/lib/c"
 WORKDIR $PSRHOME/sigpyproc
-RUN python setup.py install --record list.txt --user
+RUN python3 setup.py install --record list.txt --user
 
 
 # DSPSR
@@ -448,7 +431,7 @@ ENV DSPSR=$PSRHOME"/dspsr" \
 
 WORKDIR $DSPSR
 RUN ./bootstrap && \
-    echo "apsr asp bcpm bpsr caspsr cpsr cpsr2 dada dummy fits kat lbadr lbadr64 lofar_dal lump lwa puma2 sigproc ska1" > backends.list && \
+    echo "apsr asp bcpm bpsr caspsr cpsr cpsr2 dummy fits kat lbadr lbadr64  puma2 sigproc ska1" > backends.list && \
     ./configure --prefix=$DSPSR/install --x-libraries=/usr/lib/x86_64-linux-gnu CPPFLAGS="$CPPFLAGS -I"$DAL"/install/include -I/usr/include/hdf5/serial -I/usr/local/cuda/include -I"$PSRXML"/install/include" LDFLAGS="-L"$DAL"/install/lib -L/usr/lib/x86_64-linux-gnu/hdf5/serial -L"$PSRXML"/install/lib -L/usr/local/cuda/lib64" LIBS="-lpgplot -lcpgplot -lpsrxml -lxml2" && \
     make -j $(nproc) && \
     make && \
@@ -496,23 +479,25 @@ WORKDIR $PSRFITS2PSRFITS
 RUN make -j $(nproc) && \
     make
 
+
 # psrfits_utils
-ENV PSRFITS_UTILS=$PSRHOME"/psrfits_utils" \
-    PATH=$PATH:$PSRHOME"/psrfits_utils/install/bin" \
-    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/psrfits_utils/install/include" \
-    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/psrfits_utils/install/lib"
-WORKDIR $PSRFITS_UTILS
-RUN sed -i 's|-Werror foreign|-Werror foreign -Wno-extra-portability|g' configure.ac && \
-    ./prepare && \
-    ./configure --prefix=$PSRFITS_UTILS/install && \
-    make -j $(nproc) && \
-    make && \
-    make install
+#ENV PSRFITS_UTILS=$PSRHOME"/psrfits_utils" \
+#    PATH=$PATH:$PSRHOME"/psrfits_utils/install/bin" \
+#    C_INCLUDE_PATH=$C_INCLUDE_PATH:$PSRHOME"/psrfits_utils/install/include" \
+#    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PSRHOME"/psrfits_utils/install/lib"
+#WORKDIR $PSRFITS_UTILS
+#RUN git pull
+#RUN sed -i 's|-Werror foreign|-Werror foreign -Wno-extra-portability|g' configure.ac && \
+#    ./prepare && \
+#    ./configure --prefix=$PSRFITS_UTILS/install --with-presto=$PRESTO && \
+#    make -j $(nproc) && \
+#    make && \
+#    make install
 
 # pyslalib
 ENV PYSLALIB=$PSRHOME"/pyslalib"
 WORKDIR $PYSLALIB
-RUN python setup.py install --record list.txt --user
+RUN python3 setup.py install --record list.txt --user
 
 
 # #topcat
@@ -658,7 +643,7 @@ RUN echo "" >> .bashrc && \
     echo "export PATH=\$PATH:\$PSRCHIVE/bin" >> .mysetenv.bash && \
     echo "export C_INCLUDE_PATH=\$C_INCLUDE_PATH:\$PSRCHIVE/include" >> .mysetenv.bash && \
     echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$PSRCHIVE/lib" >> .mysetenv.bash && \
-    echo "export PYTHONPATH=\$PYTHONPATH:\$PSRCHIVE/lib/python2.7/site-packages" >> .mysetenv.bash && \
+    echo "export PYTHONPATH=\$PYTHONPATH:\$PSRCHIVE/lib/python3.8/site-packages" >> .mysetenv.bash && \
     echo "" >> .mysetenv.bash && \
 
     echo "# SIGPROC" >> .mysetenv.bash && \
@@ -756,4 +741,5 @@ RUN sed 's/X11Forwarding yes/X11Forwarding yes\nX11UseLocalhost no/' -i /etc/ssh
     echo "alias mv='mv -i'" >> .bashrc 
 RUN updatedb
 EXPOSE 22
+EXPOSE 9000
 CMD ["/usr/sbin/sshd", "-D"]
