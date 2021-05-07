@@ -244,8 +244,12 @@ RUN pip3 install pip -U && \
     pip3 install uncertainties -U && \
     pip3 install getdist -U && \
     pip3 install dynesty -U && \
-    pip3 install dyPolyChord -U
+    pip3 install dyPolyChord -U && \
+    pip3 install lmfit -U && \
+    pip3 install PyWavelets -U
 
+# Set python3 as default version
+RUN update-alternatives --install  /usr/bin/python python /usr/bin/python3 1
 
 # Switch account to psr
 USER psr
@@ -291,6 +295,8 @@ RUN wget --no-check-certificate https://www.imcce.fr/content/medias/recherche/eq
     git clone https://github.com/gdesvignes/TempoNest.git && \
     git clone https://github.com/vivekvenkris/plotres.git && \
     git clone https://github.com/vivekvenkris/fitorbit.git &&\
+    git clone https://github.com/gdesvignes/PulsePortraiture.git &&\
+    git clone https://github.com/demorest/tempo_utils &&\
     git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto" 
 
 
@@ -548,7 +554,15 @@ WORKDIR $FITORBIT
 RUN ./install.sh
 ENV PATH=$PATH:"$FITORBIT/bin"
 
+#pulse portraiture
+ENV PP=$PSRHOME"/PulsePortraiture"
+WORKDIR $PP
+RUN git checkout --track remotes/origin/py3
 
+#tempo_utils
+ENV TEMPOUTILS=$PSRHOME"/tempo_utils"
+WORKDIR $TEMPOUTILS
+RUN python3 setup.py install --record list.txt --user
 
 # Clean downloaded source codes
 WORKDIR $PSRHOME
@@ -715,6 +729,10 @@ RUN echo "" >> .bashrc && \
     echo "export FITORBIT=\$PSRHOME/fitorbit" >> .mysetenv.bash && \
     echo "export PATH=\$PATH:\$FITORBIT/bin" >> .mysetenv.bash && \
     echo "export fitorbitdir=\$PSRHOME/fitorbit/src/" >> .mysetenv.bash && \
+
+    echo "# Pulse Portraiture" >> .mysetenv.bash && \
+    echo "export PP=\$PSRHOME/PulsePortraiture" >> .mysetenv.bash && \
+    echo "export PYTHONPATH=\$PYTHONPATH:\$PP/" >> .mysetenv.bash && \
 
     echo "alias emacs='emacs -nw'" >> .mysetenv.bash  && \
     echo "alias emcas='emacs'" >> .mysetenv.bash  && \
