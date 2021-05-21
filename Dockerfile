@@ -564,10 +564,29 @@ ENV TEMPOUTILS=$PSRHOME"/tempo_utils"
 WORKDIR $TEMPOUTILS
 RUN python3 setup.py install --record list.txt --user
 
+# install ROOT
+WORKDIR $PSRHOME
+RUN git clone --branch v6-22-00-patches https://github.com/root-project/root.git root_src
+RUN mkdir root_build root_install
+WORKDIR  $PSRHOME/"/root_build"
+RUN cmake -DCMAKE_INSTALL_PREFIX=../root_install ../root_src # && check cmake configuration output for warnings or errors
+RUN cmake --build . -- install -j4 # if you have 4 cores available for compilation
+USER root
+RUN /bin/bash -c "source ../root_install/bin/thisroot.sh"
+USER psr
+
+#RUN git clone --branch v6-24-00-patches https://github.com/root-project/root.git root_src
+#RUN mkdir root_build root
+#ENV ROOT=$PSRHOME"/root"
+#WORKDIR $ROOT
+#RUN cmake -DCMAKE_INSTALL_PREFIX=$ROOT $PSRHOME"/root_src" && cmake --build . --target install 
+#USER root
+#RUN /bin/bash -c "source bin/thisroot.sh"
+#USER psr
+
 # Clean downloaded source codes
 WORKDIR $PSRHOME
 RUN rm -rf ./*.bz2 ./*.gz ./*.xz ./*.ztar ./*.zip
-
 
 # Put in file with all environmental variables
 WORKDIR $HOME
