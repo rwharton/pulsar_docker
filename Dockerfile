@@ -1,5 +1,6 @@
 # Copyright (C) 2016, 2017 by Maciej Serylak
 # Copyright (C) 2019 by Maciej Serylak and Vivek Venkatraman Krishnan
+# Test
 
 # Licensed under the Academic Free License version 3.0
 # This program comes with ABSOLUTELY NO WARRANTY.
