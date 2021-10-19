@@ -1,6 +1,5 @@
 # Copyright (C) 2016, 2017 by Maciej Serylak
 # Copyright (C) 2019 by Maciej Serylak and Vivek Venkatraman Krishnan
-# Test 2
 
 # Licensed under the Academic Free License version 3.0
 # This program comes with ABSOLUTELY NO WARRANTY.
@@ -233,8 +232,8 @@ RUN pip3 install pip -U && \
     pip3 install astroquery -U && \
     pip3 install pytz -U && \
     #pip3 install paramz -U && \
-    pip3 install APLpy -U && \
-    pip3 install pyfits -U && \
+    #pip3 install APLpy -U && \
+    #pip3 install pyfits -U && \
     pip3 install matplotlib -U && \
     pip3 install pyephem -U && \
     pip3 install setuptools_scm pep517 -U && \
@@ -565,16 +564,16 @@ ENV TEMPOUTILS=$PSRHOME"/tempo_utils"
 WORKDIR $TEMPOUTILS
 RUN python3 setup.py install --record list.txt --user
 
-# install ROOT
-WORKDIR $PSRHOME
-RUN git clone --branch v6-22-00-patches https://github.com/root-project/root.git root_src
-RUN mkdir root_build root_install
-WORKDIR  $PSRHOME/"/root_build"
-RUN cmake -DCMAKE_INSTALL_PREFIX=../root_install ../root_src # && check cmake configuration output for warnings or errors
-RUN cmake --build . -- install -j4 # if you have 4 cores available for compilation
-USER root
-RUN /bin/bash -c "source ../root_install/bin/thisroot.sh"
-USER psr
+## install ROOT
+#WORKDIR $PSRHOME
+#RUN git clone --branch v6-22-00-patches https://github.com/root-project/root.git root_src
+#RUN mkdir root_build root_install
+#WORKDIR  $PSRHOME/"/root_build"
+#RUN cmake -DCMAKE_INSTALL_PREFIX=../root_install ../root_src # && check cmake configuration output for warnings or errors
+#RUN cmake --build . -- install -j4 # if you have 4 cores available for compilation
+#USER root
+#RUN /bin/bash -c "source ../root_install/bin/thisroot.sh"
+#USER psr
 
 #RUN git clone --branch v6-24-00-patches https://github.com/root-project/root.git root_src
 #RUN mkdir root_build root
